@@ -12,9 +12,7 @@ router.post('/login', (req, res) => {
     // authentication
     authenticate(req.body.email, req.body.password)
       .then(user => {
-        if (user) {
-          req.session.userId = user._id;
-        }
+        req.session.userId = user._id;
         res.redirect('/');
       })
       .catch(_ => res.render('user/login', { error: 'Identifiants invalides', data: req.body }));
@@ -76,7 +74,12 @@ async function authenticate(email, password) {
   // comparing the passwords using bcrypt
   // if passwords match, setting the user id into the session
   const passwordMatches = await bcrypt.compare(password, user.password);
-  return passwordMatches ? user : null;
+  
+  if (passwordMatches){
+    return user;
+  }
+  
+  throw Error("Invalid email or password");
 }
 
 module.exports = router;
