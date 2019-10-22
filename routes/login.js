@@ -32,10 +32,19 @@ router.post('/register', (req, res) => {
       insertUser(pass, req, res)
         .then(_ => res.redirect('/'))
         .catch(_ => 
-          res.render('user/register', { title: 'Créer un compte', data: req.body, error: "Erreur lors de la création du compte. Merci de vérifier les données fournies." })
+          res.render('user/register', { title: 'Créer un compte', data: req.body, error: `Le compte associé à ${req.body.email} existe déjà.` })
         );
   } else {
     res.render('user/register', { title: 'Créer un compte', data: req.body, error: "Merci de renseigner la totalité des champs." });
+  }
+});
+
+router.get('/logout', (req, res) => {
+  if (req.session && req.session.userId) {
+    req.session.destroy(_ => res.redirect('/'));
+    console.log(req.session)
+  } else {
+    res.redirect('/');
   }
 });
 
@@ -45,9 +54,9 @@ async function insertUser(password, req) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   userData.firstname = body.firstname;
-  userData.email = body.email,
-  userData.lastname = body.lastname,
-  userData.password = hashedPassword
+  userData.email = body.email;
+  userData.lastname = body.lastname;
+  userData.password = hashedPassword;
 
   // inserting the user into the database
   await userData.save();
@@ -58,10 +67,9 @@ async function insertUser(password, req) {
 
 async function authenticate(req, res, email, password) {
   const user            = await User.findOne({email: email });
-  const hashedPassword  = await bcrypt.hash(password, 10);
   // comparing the passwords using bcrypt
   // if passwords match, setting the user id into the session
-  const passwordMatches = await bcrypt.compare(hashedPassword, user.password);
+  const passwordMatches = await bcrypt.compare(password, user.password);
 
   if (passwordMatches) {
     req.session.userId = user._id;
