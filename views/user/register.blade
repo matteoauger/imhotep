@@ -1,8 +1,7 @@
 include "../layout.blade"
-render title("S'enregistrer")
+render title("Créer un compte")
 replace block body
-  h1 S'enregistrer
-  pre Vous êtes nouveau ?
+  h1 Créer un compte
   - if(error)
     h3.error #{error}
   div
