@@ -10,8 +10,13 @@ router.get('/login', (req, res) => {
 router.post('/login', (req, res) => {
   if (req.body.email && req.body.password) {
     // authentication
-    authenticate(req, res, req.body.email, req.body.password)
-      .then(_ => res.redirect('/'))
+    authenticate(req.body.email, req.body.password)
+      .then(user => {
+        if (user) {
+          req.session.userId = user._id;
+        }
+        res.redirect('/');
+      })
       .catch(_ => res.render('user/login', { error: 'Identifiants invalides', data: req.body }));
   } else {
     res.render('user/login', { error: 'Merci de préciser l\'email et le mot de passe', data: req.body });
@@ -27,10 +32,13 @@ router.post('/register', (req, res) => {
       req.body.firstname && 
       req.body.lastname && 
       req.body.password) {
-      // hashing the password using bcrypt
-      const pass = req.body.password;
-      insertUser(pass, req, res)
-        .then(_ => res.redirect('/'))
+      // inserting the unser into the database
+      insertUser(req)
+        .then(user => {
+          // storing the id into the session
+          req.session.userId = user._id;
+          res.redirect('/');
+        })
         .catch(_ => 
           res.render('user/register', { title: 'Créer un compte', data: req.body, error: `Le compte associé à ${req.body.email} existe déjà.` })
         );
@@ -42,16 +50,15 @@ router.post('/register', (req, res) => {
 router.get('/logout', (req, res) => {
   if (req.session && req.session.userId) {
     req.session.destroy(_ => res.redirect('/'));
-    console.log(req.session)
   } else {
     res.redirect('/');
   }
 });
 
-async function insertUser(password, req) {
+async function insertUser(req) {
   const body = req.body;
   const userData = new User();
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(body.password, 10);
 
   userData.firstname = body.firstname;
   userData.email = body.email;
@@ -61,21 +68,15 @@ async function insertUser(password, req) {
   // inserting the user into the database
   await userData.save();
 
-  // storing the id in the session
-  req.session.userId = userData._id;
+  return userData;
 }
 
-async function authenticate(req, res, email, password) {
+async function authenticate(email, password) {
   const user            = await User.findOne({email: email });
   // comparing the passwords using bcrypt
   // if passwords match, setting the user id into the session
   const passwordMatches = await bcrypt.compare(password, user.password);
-
-  if (passwordMatches) {
-    req.session.userId = user._id;
-  } else {
-    throw Error("Invalid credentials");
-  }
+  return passwordMatches ? user : null;
 }
 
 module.exports = router;
