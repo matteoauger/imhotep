@@ -39,9 +39,14 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
+// connect to database
 mongoose.connect('mongodb://localhost/imhotep', {
   useNewUrlParser: true,
   useUnifiedTopology: true
+}).catch(err => {
+  // shutdown the server if the connection isn't established
+  console.log(err);
+  app.close();
 });
 
 module.exports = app;
