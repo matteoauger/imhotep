@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+/**
+ * User db schema
+ */
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -17,6 +20,10 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
+    required: true
+  },
+  role_id: {
+    type: Number,
     required: true
   }
 });
