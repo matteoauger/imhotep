@@ -18,7 +18,7 @@ router.post('/login', (req, res) => {
                 req.session.roleId = user.role_id;
                 res.redirect('/');
             })
-            .catch(_ => res.render('account/login', { error: 'Identifiants invalides', data: req.body }));
+            .catch(() => res.render('account/login', { error: 'Identifiants invalides', data: req.body }));
     } else {
         res.render('account/login', { error: 'Merci de préciser l\'email et le mot de passe', data: req.body });
     }
@@ -51,7 +51,7 @@ router.post('/register', (req, res) => {
 
 router.get('/logout', (req, res) => {
     if (req.session) {
-        req.session.destroy(_ => res.redirect('/'));
+        req.session.destroy(() => res.redirect('/'));
     } else {
         res.redirect('/');
     }
