@@ -1,0 +1,27 @@
+include "../layout.blade"
+render title("Administrer les rôles")
+replace block scripts 
+    script(src="/javascript/account/roles.js" type="text/javascript")
+replace block body
+    h1 Administrer les rôles
+    div
+        table.user-roles
+            tr
+                th Nom
+                th Prénom
+                th Email
+                th Rôle
+            foreach users as user
+                tr()
+                    td #{user.lastname}
+                    td #{user.firstname}
+                    td #{user.email}
+                    td
+                        select(id="#{user._id}")
+                            foreach roles as role
+                                - if (role.id == user.role_id)
+                                    option(value="#{role.id}" selected="selected") #{role.label}
+                                - else 
+                                    option(value="#{role.id}") #{role.label}
+                    
+                        
