@@ -5,7 +5,7 @@ replace block body
   - if(error)
     h3.error #{error}
   div
-    form(action="/login" method="post")
+    form(action="/account/login" method="post")
       - if(data && data.email)
         input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}")
       - else
