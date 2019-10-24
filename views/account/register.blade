@@ -2,29 +2,37 @@ include "../layout.blade"
 render title("Créer un compte")
 replace block body
   h1 Créer un compte
-  - if(error)
-    h3.error #{error}
   div
     form(action="/account/register" method="post")
-      - if(data && data.email)
-        input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}")
-      - else
-        input(type="text" name="email" placeholder="Votre adresse e-mail")
+      div
+        - if(data && data.email)
+          input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}")
+        - else
+          input(type="text" name="email" placeholder="Votre adresse e-mail")
+        - if (errors && errors.email)
+          span #{errors.email} 
 
-      - if(data && data.firstname)
-        input(type="text" name="firstname" placeholder="Votre prénom" value="#{data.firstname}")
-      - else 
-        input(type="text" name="firstname" placeholder="Votre prénom")
+      div
+        - if(data && data.firstname)
+          input(type="text" name="firstname" placeholder="Votre prénom" value="#{data.firstname}")
+        - else 
+          input(type="text" name="firstname" placeholder="Votre prénom")
+        - if (errors && errors.firstname)
+          span #{errors.firstname} 
 
-      - if(data && data.lastname)
-        input(type="text" name="lastname" placeholder="Votre nom" value="#{data.lastname}")
-      - else 
-        input(type="text" name="lastname" placeholder="Votre nom")
+      div
+        - if(data && data.lastname)
+          input(type="text" name="lastname" placeholder="Votre nom" value="#{data.lastname}")
+        - else 
+          input(type="text" name="lastname" placeholder="Votre nom")
+        - if (errors && errors.lastname)
+          span #{errors.lastname} 
 
-      - if(data && data.password)
-        input(type="password" name="password" placeholder="" value="#{data.password}")
-      - else 
-        input(type="password" name="password" placeholder="")
+      div
+        - if(data && data.password)
+          input(type="password" name="password" placeholder="" value="#{data.password}")
+        - else 
+          input(type="password" name="password" placeholder="")
 
       input(
         id="passwordConfirm"
