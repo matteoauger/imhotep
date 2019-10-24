@@ -25,28 +25,25 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/register', (req, res) => {
-    res.render('account/register', { data: null, error: "" });
+    res.render('account/register', { data: null, errors: null });
 });
 
 router.post('/register', (req, res) => {
-    if (req.body.email &&
-        req.body.firstname &&
-        req.body.lastname &&
-        req.body.password) {
-        // inserting the unser into the database
-        insertUser(req)
-            .then(user => {
-                // storing the id into the session
-                req.session.userId = user._id;
-                req.session.roleId = user.role_id;
-                res.redirect('/');
-            })
-            .catch(err =>
-                res.render('account/register', { data: req.body, error: `Le compte associé à ${req.body.email} existe déjà.` })
-            );
-    } else {
-        res.render('account/register', { data: req.body, error: "Merci de renseigner la totalité des champs." });
-    }
+    // inserting the unser into the database
+    insertUser(req)
+        .then(user => {
+            // storing the id into the session
+            req.session.userId = user._id;
+            req.session.roleId = user.role_id;
+            res.redirect('/');
+        })
+        .catch(error => {
+            // sending the validation errors to the register form
+            if (error && error.name === 'ValidationError')
+                res.render('account/register', { data: req.body, errors: error.errors });
+            else 
+                next(error);
+        });
 });
 
 router.get('/logout', (req, res) => {
@@ -60,14 +57,13 @@ router.get('/logout', (req, res) => {
 router.get('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) => {
     const users = await User.find();
     const roles = USER_ROLES;
-    
+
     res.render('account/roles', { users, roles });
 });
 
 router.post('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) => {
     if (req.body.user_id && req.body.role_id >= 0) {
-        const rslt = await User.updateOne({_id: req.body.user_id}, {role_id: req.body.role_id});
-        console.log(rslt);
+        await User.updateOne({ _id: req.body.user_id }, { role_id: req.body.role_id });
         res.status(200).send('Success');
     } else {
         // bad request
