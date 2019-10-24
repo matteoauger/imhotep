@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../model/user-schema');
+const roleRestriction = require('../middleware/role-restriction');
 const USER_ROLES = require('../model/user-roles');
 
 router.get('/login', (req, res) => {
@@ -14,6 +15,7 @@ router.post('/login', (req, res) => {
         authenticate(req.body.email, req.body.password)
             .then(user => {
                 req.session.userId = user._id;
+                req.session.roleId = user.role_id;
                 res.redirect('/');
             })
             .catch(_ => res.render('account/login', { error: 'Identifiants invalides', data: req.body }));
@@ -52,6 +54,24 @@ router.get('/logout', (req, res) => {
         req.session.destroy(_ => res.redirect('/'));
     } else {
         res.redirect('/');
+    }
+});
+
+router.get('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) => {
+    const users = await User.find();
+    const roles = USER_ROLES;
+    
+    res.render('account/roles', { users, roles });
+});
+
+router.post('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) => {
+    if (req.body.user_id && req.body.role_id >= 0) {
+        const rslt = await User.updateOne({_id: req.body.user_id}, {role_id: req.body.role_id});
+        console.log(rslt);
+        res.status(200).send('Success');
+    } else {
+        // bad request
+        res.status(400).send('Invalid request parameters');
     }
 });
 
