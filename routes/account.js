@@ -5,6 +5,9 @@ const User = require('../model/user-schema');
 const roleRestriction = require('../middleware/role-restriction');
 const USER_ROLES = require('../model/user-roles');
 
+const MIN_PASSWORD_LENGTH = 8;
+const MAX_PASSWORD_LENGTH = 32;
+
 router.get('/login', (req, res) => {
     res.render('account/login', { error: null, data: null });
 });
@@ -25,7 +28,7 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/register', (req, res) => {
-    res.render('account/register', { data: null, errors: null });
+    res.render('account/register', { data: null, errors: null, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
 });
 
 router.post('/register', (req, res) => {
@@ -40,8 +43,8 @@ router.post('/register', (req, res) => {
         .catch(error => {
             // sending the validation errors to the register form
             if (error && error.name === 'ValidationError')
-                res.render('account/register', { data: req.body, errors: error.errors });
-            else 
+                res.render('account/register', { data: req.body, errors: error.errors, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
+            else
                 next(error);
         });
 });
@@ -74,14 +77,17 @@ router.post('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) 
 async function insertUser(req) {
     const body = req.body;
     const userData = new User();
-    const hashedPassword = await bcrypt.hash(body.password, 10);
 
     userData.firstname = body.firstname;
     userData.email = body.email;
     userData.lastname = body.lastname;
-    userData.password = hashedPassword;
     // setting the role to user by default
     userData.role_id = USER_ROLES.user.id;
+
+    // hashing and setting the password to the user if the sent one is valid
+    if (body.password && body.password.length >= MIN_PASSWORD_LENGTH && body.password.length <= MAX_PASSWORD_LENGTH) {
+        userData.password = await bcrypt.hash(body.password, 10)
+    }
 
     // inserting the user into the database
     await userData.save();
