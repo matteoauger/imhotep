@@ -1,0 +1,7 @@
+include "../layout.blade"
+render title("Annonces")
+replace block body
+    h1 Liste des annonces
+div
+    foreach announcements as announcement
+        p #{announcement}

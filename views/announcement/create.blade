@@ -1,0 +1,16 @@
+include "../layout.blade"
+render title("Créer une annonce")
+replace block body
+    h1 Créer une annonce
+div
+    form(action="/announcement/create" method="post")
+        input(type="text" name="title" placeholder="Titre")
+        input(type="text" name="type" placeholder="Vente, Location")
+        input(type="text" name="publish_status" placeholder="Publiée, Non publiée")
+        input(type="text" name="transaction_status" placeholder="Disponible, Louée, Vendue")
+        input(type="text" name="description" placeholder="Description")
+        input(type="text" name="price" placeholder="Prix")
+        input(type="text" name="disponibility_date" placeholder="Date de disponibilité")
+        button(
+            type="submit"
+        ) S'enregistrer
