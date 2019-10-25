@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, `Le mot de passe est obligatoire`]
+        required: [true, `Le mot de passe doit être compris entre 8 et 32 caractères`]
     },
     role_id: {
         type: Number,
