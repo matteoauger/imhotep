@@ -1,5 +1,7 @@
 include "../layout.blade"
 render title("Créer un compte")
+replace block scripts
+  script(src="/javascript/account/register.validation.js" type="text/javascript")
 replace block body
   h1 Créer un compte
   div
@@ -30,15 +32,18 @@ replace block body
 
       div
         - if(data && data.password)
-          input(type="password" name="password" placeholder="" value="#{data.password}")
+          input(id="password" type="password" name="password" minlength="#{MIN_PASSWORD_LENGTH}" maxlength="#{MAX_PASSWORD_LENGTH}" placeholder="" value="#{data.password}")
         - else 
-          input(type="password" name="password" placeholder="")
+          input(id="password" type="password" name="password" placeholder="")
+        - if (errors && errors.password)
+          span #{errors.password} 
 
-      input(
-        id="passwordConfirm"
-        type="password"
-        value=""
-      )
-      button(
-        type="submit"
-      ) S'enregistrer
+      div
+        input(
+          id="password-confirmation"
+          type="password"
+          value=""
+        )
+        span(id="password-confirmation-error" style="display: none;") Les mots de passe ne corresponsent pas
+        
+      button(id="send-button" ype="submit") S'enregistrer
