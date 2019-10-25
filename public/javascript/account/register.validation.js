@@ -1,13 +1,21 @@
-function passwordsMatch() {
+window.onload = function() {
+    const passwordConf = document.getElementById('password-confirmation');
+    const password = document.getElementById('password');
+    const errSpan = document.getElementById('password-confirmation-error');
+    const sendButton = document.getElementById('send-button');
 
-}
-
-function validatePassword(evt) {
-    let password = evt.currentTarget.value;
-
-    if (password.length >= 8 && password.length <= 32) {
-        // password valid
-    } else {
-        // password invalid
+    function validatePasswordConfirmation() {
+        if (password.value === passwordConf.value) {
+            errSpan.style.display = 'none';
+            sendButton.disabled = '';
+        } else {
+            errSpan.style.display = 'block';
+            sendButton.disabled = 'disabled';
+        }
     }
+
+    passwordConf.onkeyup = validatePasswordConfirmation;
+    password.onkeyup = validatePasswordConfirmation;
+
+    validatePasswordConfirmation();
 }
