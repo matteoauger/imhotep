@@ -3,6 +3,7 @@ image: node
 stages:
   - build
   - test
+  - cov
 
 cache:
   paths:
@@ -19,3 +20,7 @@ install_dependencies:
 test:
   stage: test
   script: npm test
+
+coverage: 
+  stage: cov
+  script: npm run ci
