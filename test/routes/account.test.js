@@ -3,32 +3,55 @@ const assert = require('assert');
 const app = require('../../app');
 const User = require('../../model/user-schema');
 const bcrypt = require('bcrypt');
+const mms = require('mongodb-memory-server');
+
+const mongoServer = new mms.MongoMemoryServer();
 
 const mongoose = require('mongoose');
+
+// TODO 
+// MOCK MONGODB
+// https://github.com/nodkz/mongodb-memory-server
 
 /**
  * Testing the account routes
  */
 describe('Account routes', () => {
     /**
-     * Connecting to a test database
-     * Don't mock what you don't own ;)
+     * Connecting to a memory database for fast tests
      */
-    before(() => {
-        mongoose.connect('mongodb://localhost/_testdb', {
+    before(async () => {
+        const mongoUri = await mongoServer.getConnectionString();
+        const mongooseOpts = {
+            // options for mongoose 4.11.3 and above
+            autoReconnect: true,
+            reconnectTries: Number.MAX_VALUE,
+            reconnectInterval: 1000,
             useNewUrlParser: true,
             useUnifiedTopology: true
-        }).catch(() => {
-            console.error.bind(console, 'connection error');
-            assert.fail('Connection to mongodb couldn\'t be established');
-        });
-
-        const db = mongoose.connection;
+          };
         
-        db.on('error', console.error.bind(console, 'connection error'));
-        db.once('open', async () => {
-            console.log('Connection to the test database is successfully established');
-        });
+          mongoose.connect(mongoUri, mongooseOpts);
+        
+          mongoose.connection.on('error', (e) => {
+            if (e.message.code === 'ETIMEDOUT') {
+              console.log(e);
+              mongoose.connect(mongoUri, mongooseOpts);
+            }
+            console.log(e);
+          });
+        
+          mongoose.connection.once('open', () => {
+            console.log(`MongoDB successfully connected to ${mongoUri}`);
+          });
+    });
+
+    /**
+     * Disconnecting memory database
+     */
+    after(async () => {
+        await mongoose.disconnect();
+        await mongoServer.stop();
     });
 
     describe('Login page', () => {
@@ -97,14 +120,5 @@ describe('Account routes', () => {
             
             assert.equal(res.statusCode, 302);
         });
-    });
-
-    /**
-     * Dropping the test database
-     */
-    after(done => {
-        mongoose.connection.db
-        .dropDatabase()
-        .then(() => mongoose.connection.close(done));
     });
 });
