@@ -5,8 +5,9 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./bin/www"
+    "test": "mocha test/*",
+    "start": "nodemon ./bin/www",
+    "ci": "nyc --reporter=text mocha test/*"
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,10 @@
   },
   "devDependencies": {
     "express-generator": "^4.16.1",
+    "mocha": "^6.2.2",
     "nodemon": "^1.19.4",
-    "npx": "^10.2.0"
+    "npx": "^10.2.0",
+    "nyc": "^14.1.1",
+    "supertest": "^4.0.2"
   }
 }
