@@ -67,7 +67,6 @@ router.get('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) =
 router.post('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) => {
     if (req.body.user_id && req.body.role_id >= 0) {
         const rslt = await User.updateOne({_id: req.body.user_id}, {role_id: req.body.role_id});
-        console.log(rslt);
         res.status(200).send('Success');
     } else {
         // bad request
