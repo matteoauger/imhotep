@@ -4,19 +4,14 @@ const app = require('../../app');
 const User = require('../../model/user-schema');
 const bcrypt = require('bcrypt');
 const mms = require('mongodb-memory-server');
-// loading environment variables
-require('dotenv').config();
+const USER_ROLES = require('../../model/user-roles');
 
 const mongoServer = new mms.MongoMemoryServer();
 
 const mongoose = require('mongoose');
 
-// TODO 
-// MOCK MONGODB
-// https://github.com/nodkz/mongodb-memory-server
-
 /**
- * Testing the account routes
+ * Integration Testing the account routes
  */
 describe('Account routes', () => {
     /**
@@ -56,6 +51,10 @@ describe('Account routes', () => {
         await mongoServer.stop();
     });
 
+    afterEach(async () => {
+        await mongoose.connection.db.dropDatabase();
+    });
+
     describe('Login page', () => {
         it('should return (200) OK', async () => {
             const res = await request(app)
@@ -75,7 +74,7 @@ describe('Account routes', () => {
             testUser.firstname = "test"; 
             testUser.lastname = "test";
             testUser.password = await bcrypt.hash(pass, 10);
-            testUser.role_id = 0;
+            testUser.role_id = USER_ROLES.user.id;
             
             await testUser.save();
 
@@ -93,7 +92,7 @@ describe('Account routes', () => {
             testUser.firstname = "test2"; 
             testUser.lastname = "test2";
             testUser.password = await bcrypt.hash("test", 10);
-            testUser.role_id = 0;
+            testUser.role_id = USER_ROLES.user.id;
             
             await testUser.save();
 
@@ -115,11 +114,103 @@ describe('Account routes', () => {
         });
     }); 
 
-    describe('Logout', () => {
-        it('should return (302) REDIRECT', async () => {
+    describe('Register page', () => {
+        it('should return (200) OK', async () => {
             const res = await request(app)
-                .get('/account/logout');
+                .get('/account/register');
             
+            assert.equal(res.statusCode, 200);
+            assert.equal(res.type, 'text/html');
+        });
+    });
+
+    describe('Register', () => {
+        it('should create a user with valid data', async () => {
+            const data = {
+                email: "test-register@test.com",
+                firstname: "test register 1",
+                lastname: "test",
+                password: "iA?tIsSqlA=EypAcarH{EusVcO4OrvIr"
+            };
+
+            const res = await request(app)
+                .post('/account/register')
+                .send(data);
+
+            const usr = await User.findOne({email: data.email});
+
+            assert.equal(usr.firstname, data.firstname);
+            assert.equal(usr.lastname, data.lastname);
+            assert.ok(bcrypt.compareSync(data.password, usr.password));
+            assert.equal(usr.role_id, USER_ROLES.user.id);
+            assert.ok(res.header['set-cookie']);
+        });
+
+        it('should not register with missing data', async () => {
+            const data = {
+                email: "test-register@test.com",
+                lastname: "test",
+            };
+
+            const res = await request(app)
+                .post('/account/register')
+                .send(data);
+
+            const usr = await User.findOne({email: data.email});
+
+
+            assert.equal(res.status, 200);
+            assert.equal(usr, undefined);
+            assert.equal(res.header['set-cookie'], undefined);
+        });
+
+        it('should not register with invalid email', async () => {
+            const data = {
+                email: "test-regist",
+                lastname: "test",
+                firstname: "a",
+                password: "iA?tIsSqlA=EypAcarH{EusVcO4OrvIr"
+            };
+
+            const res = await request(app)
+                .post('/account/register')
+                .send(data);
+
+            const usr = await User.findOne({email: data.email});
+
+            assert.equal(res.status, 200);
+            assert.equal(usr, undefined);
+            assert.equal(res.header['set-cookie'], undefined);
+        });
+
+        it('should not register with invalid password', async () => {
+            const data = {
+                email: "test@test.com",
+                lastname: "test",
+                firstname: "test",
+                password: "test"
+            };
+
+            const res = await request(app)
+                .post('/account/register')
+                .send(data);
+            
+            const usr = await User.findOne({email: data.email});
+
+            assert.equal(res.status, 200);
+            assert.equal(usr, undefined);
+            assert.equal(res.header['set-cookie'], undefined);
+        }); 
+    });
+
+
+    describe('Logout', () => {
+        it('should destroy session', async () => {
+            const res = await request(app)
+                .get('/account/logout')
+                .set('connect.sid', 'test');
+            
+            assert.equal(res.header['set-cookie'], undefined);
             assert.equal(res.statusCode, 302);
         });
     });
