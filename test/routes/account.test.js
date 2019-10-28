@@ -7,7 +7,7 @@ const mms = require('mongodb-memory-server');
 
 const mongoServer = new mms.MongoMemoryServer({
     instance: {
-        ip: 'mongo'
+        ip: process.env.TESTDB_IP || 'localhost'
     }
 });
 
