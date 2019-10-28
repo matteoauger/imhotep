@@ -5,7 +5,11 @@ const User = require('../../model/user-schema');
 const bcrypt = require('bcrypt');
 const mms = require('mongodb-memory-server');
 
-const mongoServer = new mms.MongoMemoryServer();
+const mongoServer = new mms.MongoMemoryServer({
+    instance: {
+        ip: 'mongo'
+    }
+});
 
 const mongoose = require('mongoose');
 
