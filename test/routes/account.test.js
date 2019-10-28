@@ -4,6 +4,8 @@ const app = require('../../app');
 const User = require('../../model/user-schema');
 const bcrypt = require('bcrypt');
 const mms = require('mongodb-memory-server');
+// loading environment variables
+require('dotenv').config();
 
 const mongoServer = new mms.MongoMemoryServer({
     instance: {
