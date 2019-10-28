@@ -1,5 +1,8 @@
 image: node
 
+services: 
+    - mongo
+
 stages:
   - build
   - test
