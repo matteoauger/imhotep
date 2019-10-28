@@ -1,8 +1,5 @@
 image: node
 
-services: 
-    - mongo
-
 stages:
   - build
   - test
@@ -16,8 +13,6 @@ install_dependencies:
   stage: build
   script:
     - npm i
-    - echo TESTDB_IP=\"mongo\" >> .env
-    - cat .env #debug
   artifacts:
     paths:
       - node_modules/

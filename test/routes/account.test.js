@@ -7,11 +7,7 @@ const mms = require('mongodb-memory-server');
 // loading environment variables
 require('dotenv').config();
 
-const mongoServer = new mms.MongoMemoryServer({
-    instance: {
-        ip: process.env.TESTDB_IP || 'localhost'
-    }
-});
+const mongoServer = new mms.MongoMemoryServer();
 
 const mongoose = require('mongoose');
 
