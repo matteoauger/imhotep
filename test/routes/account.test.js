@@ -203,13 +203,151 @@ describe('Account routes', () => {
         }); 
     });
 
+    describe('Role managment', () => {
+        const userData = {
+            email: "test@test.com",
+            firstname: "test",
+            lastname: "test",
+            password: "testtest"        
+        }
+
+        /**
+         * Registering an user before each test on this section
+         * The registered user will be used because this section works with authentication.
+         */
+        beforeEach(async () => {
+            const registerRes = await request(app)
+                .post('/account/register')
+                .send(userData)
+
+            if (registerRes.status !== 302) {
+                assert.fail("Couldn't register the test user for testing role managment route.")
+            }
+        });
+
+        describe('Role managment page', () => {
+            it('should return 200 if the user is a superadmin', async () => {
+                // granting super admin access to the test user
+                await User.updateOne({email: userData.email}, {role_id: USER_ROLES.super_admin.id});
+    
+                const loginRes = await request(app)
+                    .post('/account/login')
+                    .send({email: userData.email, password: userData.password});
+
+                const cookie = loginRes.header['set-cookie'][0];
+                const cookieValue = cookie.split(';')[0];
+    
+                const res = await request(app)
+                    .get('/account/roles')
+                    .set('Cookie', cookieValue)
+                    .send();
+    
+                assert.equal(res.statusCode, 200);
+                assert.equal(res.type, 'text/html');
+            });
+    
+            it('should not grant access to an unauthorized user', async () => {
+                const loginRes = await request(app)
+                    .post('/account/login')
+                    .send({email: userData.email, password: userData.password});
+                
+                
+                const cookie = loginRes.header['set-cookie'][0];
+                const cookieValue = cookie.split(';')[0];
+    
+                const res = await request(app)
+                    .get('/account/roles')
+                    .set('Cookie', cookieValue)
+                    .send();
+    
+                assert.equal(res.statusCode, 401);
+                assert.equal(res.type, 'text/html');
+            });
+        });
+
+        describe('Role managment POST', () => {
+            it('should not grant access to a user', async () => {
+                const loginRes = await request(app)
+                    .post('/account/login')
+                    .send({email: userData.email, password: userData.password});
+                
+                const cookie = loginRes.header['set-cookie'][0];
+                const cookieValue = cookie.split(';')[0];
+    
+                const res = await request(app)
+                    .post('/account/roles')
+                    .set('Cookie', cookieValue)
+                    .send({role_id: 0, user_id: ""});
+    
+
+                let user = await User.findOne({email: userData.email});
+    
+                assert.equal(res.statusCode, 401);
+                assert.equal(user.role_id, USER_ROLES.user.id);            
+            });
+
+            it('should respond (400) BAD REQUEST with invalid data', async () => {
+                // granting super admin access to the test user
+                await User.updateOne({email: userData.email}, {role_id: USER_ROLES.super_admin.id});
+
+                const loginRes = await request(app)
+                    .post('/account/login')
+                    .send({email: userData.email, password: userData.password});
+                
+                const cookie = loginRes.header['set-cookie'][0];
+                const cookieValue = cookie.split(';')[0];
+
+                let user = await User.findOne({email: userData.email});
+    
+                const res = await request(app)
+                    .post('/account/roles')
+                    .set('Cookie', cookieValue)
+                    .send({
+                        user_id: user._id,
+                        role_id: -1
+                });
+
+                user = await User.findOne({email: userData.email});
+    
+                assert.equal(res.statusCode, 400);
+                assert.equal(user.role_id, USER_ROLES.super_admin.id);
+            });
+
+            it('should change the user role with valid parameters and authorization', async () => {
+                // granting super admin access to the test user
+                await User.updateOne({email: userData.email}, {role_id: USER_ROLES.super_admin.id});
+
+                const loginRes = await request(app)
+                    .post('/account/login')
+                    .send({email: userData.email, password: userData.password});
+                
+                const cookie = loginRes.header['set-cookie'][0];
+                const cookieValue = cookie.split(';')[0];
+
+                let user = await User.findOne({email: userData.email});
+    
+                const res = await request(app)
+                    .post('/account/roles')
+                    .set('Cookie', cookieValue)
+                    .send({
+                        user_id: user._id,
+                        role_id: USER_ROLES.agent.id
+                    });
+                
+                user = await User.findOne({email: userData.email});
+
+                assert.equal(res.statusCode, 200);
+                assert.equal(user.role_id, USER_ROLES.agent.id);
+            });
+        });
+    });
+
 
     describe('Logout', () => {
-        it('should destroy session', async () => {
+        it('should redirect', async () => {
             const res = await request(app)
-                .get('/account/logout')
-                .set('connect.sid', 'test');
-            
+                .get('/account/logout');
+
             assert.equal(res.header['set-cookie'], undefined);
             assert.equal(res.statusCode, 302);
         });
