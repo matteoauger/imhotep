@@ -26,21 +26,21 @@ describe('Account routes', () => {
             reconnectInterval: 1000,
             useNewUrlParser: true,
             useUnifiedTopology: true
-          };
+        };
         
-          mongoose.connect(mongoUri, mongooseOpts);
-        
-          mongoose.connection.on('error', (e) => {
+        mongoose.connect(mongoUri, mongooseOpts);
+
+        mongoose.connection.on('error', (e) => {
             if (e.message.code === 'ETIMEDOUT') {
-              console.log(e);
-              mongoose.connect(mongoUri, mongooseOpts);
+                console.log(e);
+                mongoose.connect(mongoUri, mongooseOpts);
             }
             console.log(e);
-          });
-        
-          mongoose.connection.once('open', () => {
+        });
+
+        mongoose.connection.once('open', () => {
             console.log(`MongoDB successfully connected to ${mongoUri}`);
-          });
+        });
     });
 
     /**
@@ -70,17 +70,17 @@ describe('Account routes', () => {
             // inserting the test user in the database
             const testUser = new User();
             const pass = "test";
-            testUser.email = "test@test.com"; 
-            testUser.firstname = "test"; 
+            testUser.email = "test@test.com";
+            testUser.firstname = "test";
             testUser.lastname = "test";
             testUser.password = await bcrypt.hash(pass, 10);
             testUser.role_id = USER_ROLES.user.id;
-            
+
             await testUser.save();
 
             const res = await request(app)
                 .post('/account/login')
-                .send({email: testUser.email, password: pass});
+                .send({ email: testUser.email, password: pass });
 
             assert.equal(res.statusCode, 302);
             assert.ok(res.header['set-cookie'])
@@ -88,18 +88,18 @@ describe('Account routes', () => {
 
         it('should not login with invalid credentials', async () => {
             const testUser = new User();
-            testUser.email = "test2@test.com"; 
-            testUser.firstname = "test2"; 
+            testUser.email = "test2@test.com";
+            testUser.firstname = "test2";
             testUser.lastname = "test2";
             testUser.password = await bcrypt.hash("test", 10);
             testUser.role_id = USER_ROLES.user.id;
-            
+
             await testUser.save();
 
             const res = await request(app)
                 .post('/account/login')
-                .send({email: testUser.email, password: "test2"});
-            
+                .send({ email: testUser.email, password: "test2" });
+
             assert.equal(res.statusCode, 200);
             assert.equal(res.header['set-cookie'], undefined);
         });
@@ -107,18 +107,18 @@ describe('Account routes', () => {
         it('should not login with missing credentials', async () => {
             const res = await request(app)
                 .post('/account/login')
-                .send({email: "test@test.com"});
-            
+                .send({ email: "test@test.com" });
+
             assert.equal(res.statusCode, 200);
             assert.equal(res.header['set-cookie'], undefined);
         });
-    }); 
+    });
 
     describe('Register page', () => {
         it('should return (200) OK', async () => {
             const res = await request(app)
                 .get('/account/register');
-            
+
             assert.equal(res.statusCode, 200);
             assert.equal(res.type, 'text/html');
         });
@@ -137,7 +137,7 @@ describe('Account routes', () => {
                 .post('/account/register')
                 .send(data);
 
-            const usr = await User.findOne({email: data.email});
+            const usr = await User.findOne({ email: data.email });
 
             assert.equal(usr.firstname, data.firstname);
             assert.equal(usr.lastname, data.lastname);
@@ -156,7 +156,7 @@ describe('Account routes', () => {
                 .post('/account/register')
                 .send(data);
 
-            const usr = await User.findOne({email: data.email});
+            const usr = await User.findOne({ email: data.email });
 
 
             assert.equal(res.status, 200);
@@ -176,7 +176,7 @@ describe('Account routes', () => {
                 .post('/account/register')
                 .send(data);
 
-            const usr = await User.findOne({email: data.email});
+            const usr = await User.findOne({ email: data.email });
 
             assert.equal(res.status, 200);
             assert.equal(usr, undefined);
@@ -194,13 +194,13 @@ describe('Account routes', () => {
             const res = await request(app)
                 .post('/account/register')
                 .send(data);
-            
-            const usr = await User.findOne({email: data.email});
+
+            const usr = await User.findOne({ email: data.email });
 
             assert.equal(res.status, 200);
             assert.equal(usr, undefined);
             assert.equal(res.header['set-cookie'], undefined);
-        }); 
+        });
     });
 
     describe('Role managment', () => {
@@ -208,7 +208,7 @@ describe('Account routes', () => {
             email: "test@test.com",
             firstname: "test",
             lastname: "test",
-            password: "testtest"        
+            password: "testtest"
         }
 
         /**
@@ -228,38 +228,38 @@ describe('Account routes', () => {
         describe('Role managment page', () => {
             it('should return 200 if the user is a superadmin', async () => {
                 // granting super admin access to the test user
-                await User.updateOne({email: userData.email}, {role_id: USER_ROLES.super_admin.id});
-    
+                await User.updateOne({ email: userData.email }, { role_id: USER_ROLES.super_admin.id });
+
                 const loginRes = await request(app)
                     .post('/account/login')
-                    .send({email: userData.email, password: userData.password});
+                    .send({ email: userData.email, password: userData.password });
 
                 const cookie = loginRes.header['set-cookie'][0];
                 const cookieValue = cookie.split(';')[0];
-    
+
                 const res = await request(app)
                     .get('/account/roles')
                     .set('Cookie', cookieValue)
                     .send();
-    
+
                 assert.equal(res.statusCode, 200);
                 assert.equal(res.type, 'text/html');
             });
-    
+
             it('should not grant access to an unauthorized user', async () => {
                 const loginRes = await request(app)
                     .post('/account/login')
-                    .send({email: userData.email, password: userData.password});
-                
-                
+                    .send({ email: userData.email, password: userData.password });
+
+
                 const cookie = loginRes.header['set-cookie'][0];
                 const cookieValue = cookie.split(';')[0];
-    
+
                 const res = await request(app)
                     .get('/account/roles')
                     .set('Cookie', cookieValue)
                     .send();
-    
+
                 assert.equal(res.statusCode, 401);
                 assert.equal(res.type, 'text/html');
             });
@@ -269,63 +269,63 @@ describe('Account routes', () => {
             it('should not grant access to a user', async () => {
                 const loginRes = await request(app)
                     .post('/account/login')
-                    .send({email: userData.email, password: userData.password});
-                
+                    .send({ email: userData.email, password: userData.password });
+
                 const cookie = loginRes.header['set-cookie'][0];
                 const cookieValue = cookie.split(';')[0];
-    
+
                 const res = await request(app)
                     .post('/account/roles')
                     .set('Cookie', cookieValue)
-                    .send({role_id: 0, user_id: ""});
-    
+                    .send({ role_id: 0, user_id: "" });
 
-                let user = await User.findOne({email: userData.email});
-    
+
+                let user = await User.findOne({ email: userData.email });
+
                 assert.equal(res.statusCode, 401);
-                assert.equal(user.role_id, USER_ROLES.user.id);            
+                assert.equal(user.role_id, USER_ROLES.user.id);
             });
 
             it('should respond (400) BAD REQUEST with invalid data', async () => {
                 // granting super admin access to the test user
-                await User.updateOne({email: userData.email}, {role_id: USER_ROLES.super_admin.id});
+                await User.updateOne({ email: userData.email }, { role_id: USER_ROLES.super_admin.id });
 
                 const loginRes = await request(app)
                     .post('/account/login')
-                    .send({email: userData.email, password: userData.password});
-                
+                    .send({ email: userData.email, password: userData.password });
+
                 const cookie = loginRes.header['set-cookie'][0];
                 const cookieValue = cookie.split(';')[0];
 
-                let user = await User.findOne({email: userData.email});
-    
+                let user = await User.findOne({ email: userData.email });
+
                 const res = await request(app)
                     .post('/account/roles')
                     .set('Cookie', cookieValue)
                     .send({
                         user_id: user._id,
                         role_id: -1
-                });
+                    });
 
-                user = await User.findOne({email: userData.email});
-    
+                user = await User.findOne({ email: userData.email });
+
                 assert.equal(res.statusCode, 400);
                 assert.equal(user.role_id, USER_ROLES.super_admin.id);
             });
 
             it('should change the user role with valid parameters and authorization', async () => {
                 // granting super admin access to the test user
-                await User.updateOne({email: userData.email}, {role_id: USER_ROLES.super_admin.id});
+                await User.updateOne({ email: userData.email }, { role_id: USER_ROLES.super_admin.id });
 
                 const loginRes = await request(app)
                     .post('/account/login')
-                    .send({email: userData.email, password: userData.password});
-                
+                    .send({ email: userData.email, password: userData.password });
+
                 const cookie = loginRes.header['set-cookie'][0];
                 const cookieValue = cookie.split(';')[0];
 
-                let user = await User.findOne({email: userData.email});
-    
+                let user = await User.findOne({ email: userData.email });
+
                 const res = await request(app)
                     .post('/account/roles')
                     .set('Cookie', cookieValue)
@@ -333,8 +333,8 @@ describe('Account routes', () => {
                         user_id: user._id,
                         role_id: USER_ROLES.agent.id
                     });
-                
-                user = await User.findOne({email: userData.email});
+
+                user = await User.findOne({ email: userData.email });
 
                 assert.equal(res.statusCode, 200);
                 assert.equal(user.role_id, USER_ROLES.agent.id);
