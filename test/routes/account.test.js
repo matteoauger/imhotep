@@ -3,10 +3,10 @@ const assert = require('assert');
 const app = require('../../app');
 const User = require('../../model/user-schema');
 const bcrypt = require('bcrypt');
-const mms = require('mongodb-memory-server');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const USER_ROLES = require('../../model/user-roles');
 
-const mongoServer = new mms.MongoMemoryServer();
+const mongoServer = new MongoMemoryServer();
 
 const mongoose = require('mongoose');
 
