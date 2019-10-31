@@ -17,7 +17,8 @@ describe('Account routes', () => {
     /**
      * Connecting to a memory database for fast tests
      */
-    before(async () => {
+    before(async function() {
+        this.timeout(60000); 
         const mongoUri = await mongoServer.getConnectionString();
         const mongooseOpts = {
             // options for mongoose 4.11.3 and above

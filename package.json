@@ -5,9 +5,9 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "mocha test/* --timeout 60000",
+    "test": "mocha test/*",
     "start": "nodemon ./bin/www",
-    "ci": "nyc --reporter=text mocha test/* --timeout 60000"
+    "ci": "nyc --reporter=text mocha test/*"
   },
   "repository": {
     "type": "git",
