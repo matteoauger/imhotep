@@ -8,7 +8,8 @@
     "test": "mocha test/*",
     "start": "nodemon ./bin/www",
     "ci": "nyc --reporter=text mocha test/*",
-    "sass": "sass sass:public/stylesheets"
+    "sass": "sass sass:public/stylesheets",
+    "sass-dev": "sass --watch sass:public/stylesheets"
   },
   "repository": {
     "type": "git",
