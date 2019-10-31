@@ -12,7 +12,10 @@ install_dependencies:
   stage: build
   script:
     - npm i
+  artifacts:
+    paths:
+      - node_modules/
 
 test:
   stage: test
-  script: npm run ci
+  script: npm test
