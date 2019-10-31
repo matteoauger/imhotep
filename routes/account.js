@@ -4,12 +4,13 @@ const bcrypt = require('bcrypt');
 const User = require('../model/user-schema');
 const roleRestriction = require('../middleware/role-restriction');
 const USER_ROLES = require('../model/user-roles');
+const renderView = require('../middleware/render-view');
 
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 32;
 
 router.get('/login', (req, res) => {
-    res.render('account/login', { error: null, data: null });
+    renderView(req, res, 'account/login', { error: null, data: null });
 });
 
 router.post('/login', (req, res) => {
@@ -21,14 +22,14 @@ router.post('/login', (req, res) => {
                 req.session.roleId = user.role_id;
                 res.redirect('/');
             })
-            .catch(() => res.render('account/login', { error: 'Identifiants invalides', data: req.body }));
+            .catch(() => renderView(req, res, 'account/login', { error: 'Identifiants invalides', data: req.body }));
     } else {
-        res.render('account/login', { error: 'Merci de préciser l\'email et le mot de passe', data: req.body });
+        renderView(req, res, 'account/login', { error: 'Merci de préciser l\'email et le mot de passe', data: req.body });
     }
 });
 
 router.get('/register', (req, res) => {
-    res.render('account/register', { data: null, errors: null, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
+    renderView(req, res, 'account/register', { data: null, errors: null, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
 });
 
 router.post('/register', (req, res) => {
@@ -43,7 +44,7 @@ router.post('/register', (req, res) => {
         .catch(error => {
             // sending the validation errors to the register form
             if (error && error.name === 'ValidationError')
-                res.render('account/register', { data: req.body, errors: error.errors, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
+                renderView(req, res, 'account/register', { data: req.body, errors: error.errors, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
             else
                 next(error);
         });
@@ -61,7 +62,7 @@ router.get('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) =
     const users = await User.find();
     const roles = USER_ROLES;
 
-    res.render('account/roles', { users, roles });
+    renderView(req, res, 'account/roles', { users, roles });
 });
 
 router.post('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) => {
