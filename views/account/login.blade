@@ -1,4 +1,6 @@
 include "../layout.blade"
+replace block stylesheets
+  link(rel="stylesheet" href="/stylesheets/form.css")
 render title("Se connecter")
 replace block maincontent
   h1 Se connecter
@@ -9,7 +11,7 @@ replace block maincontent
 
     form(action="/account/login" method="post")
       div(class="form-group")
-        label(for="email") Adresse email
+        label(for="email") Adresse e-mail
         - if(data && data.email)
           input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}")
         - else
@@ -23,4 +25,4 @@ replace block maincontent
           input(type="password" name="password" placeholder="")
 
       div(class="form-button-container")
-        button(class="send-button" type="submit") Se connecter
+        button(type="submit") Se connecter
