@@ -4,10 +4,6 @@ stages:
   - build
   - test
 
-cache:
-  paths:
-    - node_modules/
-
 install_dependencies:
   stage: build
   script:
