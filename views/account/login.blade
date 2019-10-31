@@ -2,20 +2,25 @@ include "../layout.blade"
 render title("Se connecter")
 replace block maincontent
   h1 Se connecter
-  - if(error)
-    h3.error #{error}
-  div
+  div(class="form")
+    - if(error)
+    div(class="form-error")
+      span(class="error") #{error}
+
     form(action="/account/login" method="post")
-      - if(data && data.email)
-        input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}")
-      - else
-        input(type="text" name="email" placeholder="Votre adresse e-mail")
+      div(class="form-group")
+        label(for="email") Adresse email
+        - if(data && data.email)
+          input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}")
+        - else
+          input(type="text" name="email" placeholder="Votre adresse e-mail")
 
-      - if(data && data.password)
-        input(type="password" name="password" placeholder="" value="#{data.password}")
-      - else 
-        input(type="password" name="password" placeholder="")
+      div(class="form-group")
+        label(for="password") Mot de passe
+        - if(data && data.password)
+          input(type="password" name="password" placeholder="" value="#{data.password}")
+        - else 
+          input(type="password" name="password" placeholder="")
 
-      button(
-        type="submit"
-      ) Se connecter
+      div(class="form-button-container")
+        button(class="send-button" type="submit") Se connecter
