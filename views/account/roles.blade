@@ -1,18 +1,20 @@
 include "../layout.blade"
 render title("Administrer les rôles")
+replace block stylesheets
+    link(rel="stylesheet" href="/stylesheets/admin/roles.css")
 replace block scripts 
     script(src="/javascript/account/roles.js" type="text/javascript")
 replace block maincontent
     h1 Administrer les rôles
-    div
-        table.user-roles
+    div(class="role-table")
+        table
             tr
                 th Nom
                 th Prénom
                 th Email
                 th Rôle
             foreach users as user
-                tr()
+                tr
                     td #{user.lastname}
                     td #{user.firstname}
                     td #{user.email}

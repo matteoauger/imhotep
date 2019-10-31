@@ -1,0 +1,23 @@
+@import "../modules/common";
+
+div.role-table {
+    table {
+        border: 2px solid $darkblue;
+
+        tr {
+            &:nth-child(even) {
+                background-color: darken($background-color, 10%);
+            }
+
+            th {
+                font-weight: bold;
+                font-size: 1.15rem;
+            }
+
+            th, td {    
+                text-align: left;
+                padding: 15px;
+            }
+        }
+    }
+}
