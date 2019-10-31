@@ -1,6 +1,6 @@
 include "layout.blade"
 render title("Erreur")
-replace block body
+replace block maincontent
     h1 #{message}
     h2 #{error.status}
     pre #{error.stack}

@@ -4,6 +4,20 @@ html
     block title(pageTitle)
       title=pageTitle
     block scripts
+
+    link(rel="stylesheet" href="/stylesheets/style.css")
     block stylesheets
   body
-    block body
+    section(class="header")
+      div(class="banner")
+        img(src="/images/banner.png")
+      nav(class="navigation-bar")
+        div(class="nav-wrapper")
+          a(class="nav-item home bordered" href="/") Imhotep
+          a(class="nav-item bordered" href="/") Annonces
+          a(class="nav-item bordered" href="/") Publier une annonce
+          a(class="nav-item bordered" href="/account/login") Se connecter
+          a(class="nav-item bordered" href="/account/register") S'enregistrer
+          a(class="nav-item" href="/account/logout") Se déconnecter
+    section(class="maincontent")
+      block maincontent

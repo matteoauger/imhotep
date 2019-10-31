@@ -2,7 +2,7 @@ include "../layout.blade"
 render title("Créer un compte")
 replace block scripts
   script(src="/javascript/account/register.validation.js" type="text/javascript")
-replace block body
+replace block maincontent
   h1 Créer un compte
   div
     form(action="/account/register" method="post")
