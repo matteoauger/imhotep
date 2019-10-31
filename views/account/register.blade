@@ -1,49 +1,58 @@
 include "../layout.blade"
 render title("Créer un compte")
+replace block stylesheets
+  link(rel="stylesheet" href="/stylesheets/form.css")
 replace block scripts
   script(src="/javascript/account/register.validation.js" type="text/javascript")
 replace block maincontent
   h1 Créer un compte
-  div
+  div(class="form")
     form(action="/account/register" method="post")
-      div
+      div(class="form-group")
+        label(for="email") Adresse email
         - if(data && data.email)
           input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}")
         - else
           input(type="text" name="email" placeholder="Votre adresse e-mail")
         - if (errors && errors.email)
-          span #{errors.email} 
+          span(class="field-error") #{errors.email} 
 
-      div
+      div(class="form-group")
+        label(for="firstname") Prénom
         - if(data && data.firstname)
           input(type="text" name="firstname" placeholder="Votre prénom" value="#{data.firstname}")
         - else 
           input(type="text" name="firstname" placeholder="Votre prénom")
         - if (errors && errors.firstname)
-          span #{errors.firstname} 
+          span(class="field-error") #{errors.firstname} 
 
-      div
+      div(class="form-group")
+        label(for="lastname") Nom
         - if(data && data.lastname)
           input(type="text" name="lastname" placeholder="Votre nom" value="#{data.lastname}")
         - else 
           input(type="text" name="lastname" placeholder="Votre nom")
         - if (errors && errors.lastname)
-          span #{errors.lastname} 
+          span(class="field-error") #{errors.lastname} 
 
-      div
+      div(class="form-group")
+        label(for="password") Mot de passe
         - if(data && data.password)
           input(id="password" type="password" name="password" minlength="#{MIN_PASSWORD_LENGTH}" maxlength="#{MAX_PASSWORD_LENGTH}" placeholder="" value="#{data.password}")
         - else 
           input(id="password" type="password" name="password" placeholder="")
         - if (errors && errors.password)
-          span #{errors.password} 
+          span(class="field-error") #{errors.password} 
 
-      div
+      div(class="form-group")
+        label(for="password-confirmation") Confirmation mot de passe
         input(
           id="password-confirmation"
+          name="password-confirmation"
           type="password"
           value=""
         )
-        span(id="password-confirmation-error" style="display: none;") Les mots de passe ne corresponsent pas
+        span(class="field-error", id="password-confirmation-error" style="display: none;") Les mots de passe ne corresponsent pas
         
-      button(id="send-button" ype="submit") S'enregistrer
+      div(class="form-button-container")
+        button(id="send-button" type="submit") S'enregistrer
