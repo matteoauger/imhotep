@@ -18,4 +18,4 @@ install_dependencies:
 
 test:
   stage: test
-  script: npm test
+  script: npm run ci
