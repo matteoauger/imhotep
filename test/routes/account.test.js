@@ -17,8 +17,8 @@ describe('Account routes', () => {
     /**
      * Connecting to a memory database for fast tests
      */
-    before(async function() {
-        this.timeout(60000); 
+    before(async function () {
+        this.timeout(60000);
         const mongoUri = await mongoServer.getConnectionString();
         const mongooseOpts = {
             // options for mongoose 4.11.3 and above
@@ -27,21 +27,8 @@ describe('Account routes', () => {
             reconnectInterval: 1000,
             useNewUrlParser: true,
             useUnifiedTopology: true
-          };
-        
-          mongoose.connect(mongoUri, mongooseOpts);
-        
-          mongoose.connection.on('error', (e) => {
-            if (e.message.code === 'ETIMEDOUT') {
-              console.log(e);
-              mongoose.connect(mongoUri, mongooseOpts);
-            }
-            console.log(e);
-          });
-        
-          mongoose.connection.once('open', () => {
-            console.log(`MongoDB successfully connected to ${mongoUri}`);
-          });
+        };
+        await mongoose.connect(mongoUri, mongooseOpts);
     });
 
     /**
