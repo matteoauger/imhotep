@@ -2,13 +2,18 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const morgan = require('morgan');
 const session = require('express-session');
+const fs = require('fs');
 
 const indexRouter = require('./routes/index');
 const accountRouter = require('./routes/account');
 
 const app = express();
+
+require('dotenv').config();
+
+const logging = process.env.ENABLE_LOGS && process.env.ENABLE_LOGS === "true";
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,11 +24,20 @@ app.use(session({
     resave: true,
     saveUninitialized: false
 }));
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+if (logging) {
+    // create a write stream (in append mode)
+    var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+
+    // setup the logger
+    app.use(morgan('combined', { stream: accessLogStream }));
+} else {
+    app.use(morgan('dev'));
+}
 
 app.use('/', indexRouter);
 app.use('/account', accountRouter);
