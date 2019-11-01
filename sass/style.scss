@@ -8,6 +8,10 @@ body {
       div.banner {
         margin: 0 5% 0 5%;
         overflow: hidden;
+        object-fit: cover;
+        @media screen and (max-width: 750px) {
+          margin: 0;
+        }
       } 
     }
     &.maincontent {

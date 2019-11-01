@@ -17,6 +17,9 @@ div.form {
     div.form-group {
         display: flex;
         align-items: center;
+        @media screen and (max-width: 600px) {
+            flex-direction: column;
+        }
 
         label {
             color: $darkblue;

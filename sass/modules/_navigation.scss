@@ -1,20 +1,25 @@
 nav.navigation-bar {
   div.nav-wrapper {
+    font-family: $title-font;
     margin: 0 5% 0 5%;
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    
-    // Responsive
-    @media screen and (max-width: 600px) {
-        flex-direction: column;
+    @media screen and (max-width: 750px) {
+      margin: 0;
+      flex-direction: column;
     }
 
     // nav item
     a.nav-item {
       &.bordered {
         border-right: 1px solid $darkblue;
+
+        @media screen and (max-width: 750px) {
+          border-right: none;
+          border-bottom: 1px solid $darkblue;
+        }
       }
 
       &.home {
