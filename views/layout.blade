@@ -4,6 +4,26 @@ html
     block title(pageTitle)
       title=pageTitle
     block scripts
+
+    link(rel="stylesheet" href="/stylesheets/style.css")
     block stylesheets
   body
-    block body
+    section(class="header")
+      div(class="banner")
+        img(src="/images/banner.png" alt="Bannière")
+      nav(class="navigation-bar")
+        div(class="nav-wrapper")
+          a(class="nav-item home bordered" href="/") Imhotep
+          a(class="nav-item bordered" href="/") Annonces
+          - if(roleId > -1 && roleId <= 1)
+            a(class="nav-item bordered" href="/") Publier une annonce
+          - if(roleId == 0)
+            a(class="nav-item bordered" href="/") Gérer les annonces
+            a(class="nav-item bordered" href="/account/roles") Gérer les roles
+          - if(roleId < 0)
+            a(class="nav-item bordered" href="/account/login") Se connecter
+            a(class="nav-item bordered" href="/account/register") S'enregistrer
+          - if(roleId > -1)
+            a(class="nav-item" href="/account/logout") Se déconnecter
+    section(class="maincontent")
+      block maincontent

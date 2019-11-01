@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const PWD_MIN = 8;
-const PWD_MAX = 32;
 const EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 /**
@@ -22,21 +20,21 @@ const UserSchema = new mongoose.Schema({
     },
     firstname: {
         type: String,
-        required: [true, "Le nom est obligatoire"],
+        required: [true, "Le prénom est obligatoire"],
         trim: true
     },
     lastname: {
         type: String,
-        required: [true, "Le nom de famille est obligatoire"],
+        required: [true, "Le nom est obligatoire"],
         trim: true
     },
     password: {
         type: String,
-        required: [true, `Le mot de passe doit être compris entre 8 et 32 caractères`]
+        required: [true, 'Le mot de passe doit être compris entre 8 et 32 caractères']
     },
     role_id: {
         type: Number,
-        required: true,
+        required: [true, 'Le rôle est obligatoire'],
     }
 });
 

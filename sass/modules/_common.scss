@@ -1,0 +1,44 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Condensed&display=swap');
+
+$title-font: 'Roboto Condensed', sans-serif, 'Liberation';
+$text-font: 'Open Sans', 'Liberation';
+
+// Colors
+$background-color: #FFF4A8;
+$yellow: #EDB230;
+$darkyellow: darken($yellow, 10%);
+$darkblue: #2C363F;
+
+// Icons
+
+// Base styles
+body {
+    font-size: 1.1rem;
+    font-family: $text-font;
+    background-color: $background-color;
+    
+    p {
+      text-justify: auto;
+    }
+    h1 {
+      font-size: 2rem;
+      color: $yellow;
+      font-family: $title-font;
+      border-bottom: 2px solid $yellow;
+    }
+}
+
+button {
+    background-color: $yellow;
+    width: 200px;
+    height: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border: 1px solid $darkblue;
+    border-radius: 10px;
+
+    &:hover {
+        background-color: $darkyellow;
+    }
+}
