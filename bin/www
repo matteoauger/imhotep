@@ -8,6 +8,8 @@ const app = require('../app');
 const debug = require('debug')('imhotep:server');
 const http = require('http');
 const mongoose = require('mongoose');
+// loading environment variables
+require('dotenv').config();
 
 /**
  * Get port from environment and store in Express.
@@ -33,7 +35,7 @@ server.on('listening', onListening);
 /**
  * Connect the database.
  */
-mongoose.connect('mongodb://localhost/imhotep', {
+mongoose.connect(process.env.MONGODB || 'mongodb://localhost/imhotep', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 }).catch(err => {
