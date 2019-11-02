@@ -4,10 +4,10 @@
 
 Nom                | identifiant | rôle        |
 -------------------|-------------|-------------|
-Matteo AUGER       | am150982    | Developpeur |
+Matteo AUGER       | am150982    | Développeur |
 Yoann EICHELBERGER | ey143326    | Développeur |
 
-Date butoire : 5/11/2019
+Date butoire : 3/11/2019
 
 ## Gestionnaire d'annonces web pour agence immobilière 
 
