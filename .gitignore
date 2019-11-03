@@ -1,5 +1,6 @@
 node_modules
-package-lock.json
 .env
 .nyc_output
 public/stylesheets
+access.log
+package-lock.json
