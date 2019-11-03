@@ -1,0 +1,21 @@
+image: node
+
+stages:
+  - build
+  - test
+
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: build
+  script:
+    - npm i
+  artifacts:
+    paths:
+      - node_modules/
+
+test:
+  stage: test
+  script: npm run ci

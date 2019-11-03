@@ -1,4 +1,5 @@
 # Imhotep
+[![pipeline status](https://www-apps.univ-lehavre.fr/forge/imhotep/imhotep/badges/master/pipeline.svg)](https://www-apps.univ-lehavre.fr/forge/imhotep/imhotep/commits/master) [![coverage report](https://www-apps.univ-lehavre.fr/forge/imhotep/imhotep/badges/master/coverage.svg)](https://www-apps.univ-lehavre.fr/forge/imhotep/imhotep/commits/master)
 
 ## Projet M2 iWOCS Framework Web
 
