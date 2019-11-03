@@ -5,9 +5,11 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "mocha test/*",
+    "test": "mocha test/* --timeout 60000",
     "start": "nodemon ./bin/www",
-    "ci": "nyc --reporter=text mocha test/*"
+    "ci": "nyc --reporter=text mocha test/* --timeout 60000",
+    "sass": "sass sass:public/stylesheets",
+    "sass-dev": "sass --watch sass:public/stylesheets"
   },
   "repository": {
     "type": "git",
@@ -41,6 +43,7 @@
     "nodemon": "^1.19.4",
     "npx": "^10.2.0",
     "nyc": "^14.1.1",
+    "sass": "^1.23.2",
     "supertest": "^4.0.2"
   }
 }

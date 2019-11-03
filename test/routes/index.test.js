@@ -13,6 +13,15 @@ describe('Index route', () => {
         assert.equal(res.statusCode, 200);
         assert.equal(res.type, 'text/html');
     });
+
+    it('should send a response containing login and register buttons', async () => {
+        const res = await request(app)
+            .get('/');
+
+        assert.ok(res.text.includes('href="/account/login"'));
+        assert.ok(res.text.includes('href="/account/register'));
+        assert.ok(!res.text.includes('href="/account/logout"'));
+    });
     
     it('should return (404) NOT FOUND on non-existing route', async () => {
         const res = await request(app)

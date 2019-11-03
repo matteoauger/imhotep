@@ -1,0 +1,49 @@
+@import "modules/common";
+
+// Forms
+div.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    div.form-error {
+        span {
+            margin: 10px;
+            color: red;
+        }
+    }
+
+    div.form-group {
+        display: flex;
+        align-items: center;
+        @media screen and (max-width: 600px) {
+            flex-direction: column;
+        }
+
+        label {
+            color: $darkblue;
+            margin-right: 20px;
+            font-weight: bold;
+            width: 150px;
+        }
+
+        input {
+            width: 250px;
+            height: 50px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        span.field-error {
+            color: red;
+            padding: 15px;
+        }
+    }
+
+    div.form-button-container {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+    }
+}
