@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const User = require('../model/user-schema');
 const roleRestriction = require('../middleware/role-restriction');
 const USER_ROLES = require('../model/user-roles');
+const wrap = require('../middleware/promise-wrapper');
 const renderView = require('../middleware/render-view');
 
 const MIN_PASSWORD_LENGTH = 8;
@@ -13,42 +14,43 @@ router.get('/login', (req, res) => {
     renderView(req, res, 'account/login', { error: null, data: {} });
 });
 
-router.post('/login', (req, res) => {
-    if (req.body.email && req.body.password) {
-        // authentication
-        authenticate(req.body.email, req.body.password)
-            .then(user => {
-                req.session.userId = user._id;
-                req.session.roleId = user.role_id;
-                res.redirect('/');
-            })
-            .catch(() => renderView(req, res, 'account/login', { error: 'Identifiants invalides', data: req.body }));
-    } else {
+router.post('/login', wrap(async (req, res) => {
+    if (!req.body.email || !req.body.password) {
         renderView(req, res, 'account/login', { error: 'Merci de préciser l\'email et le mot de passe', data: req.body });
     }
-});
+    // authentication
+    try {
+        const user = await authenticate(req.body.email, req.body.password);
+        req.session.userId = user._id;
+        req.session.roleId = user.role_id;
+        return res.redirect('/');
+    }
+    catch (_) {
+        return renderView(req, res, 'account/login', { error: 'Identifiants invalides', data: req.body });
+    }
+}));
 
 router.get('/register', (req, res) => {
     renderView(req, res, 'account/register', { data: {}, errors: null, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
 });
 
-router.post('/register', (req, res, next) => {
+router.post('/register', wrap(async (req, res, next) => {
     // inserting the unser into the database
-    insertUser(req)
-        .then(user => {
-            // storing the id into the session
-            req.session.userId = user._id;
-            req.session.roleId = user.role_id;
-            res.redirect('/');
-        })
-        .catch(error => {
-            // sending the validation errors to the register form
-            if (error && error.name === 'ValidationError')
-                renderView(req, res, 'account/register', { data: req.body, errors: error.errors, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
-            else
-                next(error);
-        });
-});
+    try {
+        const user = await insertUser(req);
+        // storing the id into the session
+        req.session.userId = user._id;
+        req.session.roleId = user.role_id;
+        res.redirect('/');
+    }
+    catch (error) {
+        // sending the validation errors to the register form
+        if (error && error.name === 'ValidationError')
+            renderView(req, res, 'account/register', { data: req.body, errors: error.errors, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH });
+        else
+            next(error);
+    }
+}));
 
 router.get('/logout', (req, res) => {
     if (req.session) {
@@ -58,20 +60,19 @@ router.get('/logout', (req, res) => {
     }
 });
 
-router.get('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) => {
+router.get('/roles', roleRestriction(USER_ROLES.super_admin), wrap(async (req, res) => {
     const users = await User.find();
     const roles = USER_ROLES;
 
     renderView(req, res, 'account/roles', { users, roles });
-});
+}));
 
 router.post('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) => {
-    if (req.body.user_id && req.body.role_id >= 0) {
+    if (!req.body.user_id || req.body.role_id < 0) {
+        res.status(400).send('Invalid request parameters');
+    } else {
         await User.updateOne({ _id: req.body.user_id }, { role_id: req.body.role_id });
         res.status(200).send('Success');
-    } else {
-        // bad request
-        res.status(400).send('Invalid request parameters');
     }
 });
 
