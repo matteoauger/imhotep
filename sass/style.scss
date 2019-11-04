@@ -3,17 +3,8 @@
 
 // body default style
 body {
+  margin: 0;
   section {
-    &.header {
-      div.banner {
-        margin: 0 5% 0 5%;
-        overflow: hidden;
-        object-fit: cover;
-        @media screen and (max-width: 750px) {
-          margin: 0;
-        }
-      } 
-    }
     &.maincontent {
       margin: 20px 10% 20px 10%;
     }

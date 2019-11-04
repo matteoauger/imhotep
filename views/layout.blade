@@ -9,17 +9,16 @@ html
     block stylesheets
   body
     section(class="header")
-      div(class="banner")
-        img(src="/images/banner.png" alt="Bannière")
       nav(class="navigation-bar")
         div(class="nav-wrapper")
-          a(class="nav-item home bordered" href="/") Imhotep
-          a(class="nav-item bordered" href="/ads") Annonces
+          div(class="nav-item home")
+            a(href="/") Imhotep
+          a(class="nav-item" href="/ads") Annonces
           - if(roleId == 0)
-            a(class="nav-item bordered" href="/account/roles") Gérer les roles
+            a(class="nav-item" href="/account/roles") Gérer les roles
           - if(roleId < 0)
-            a(class="nav-item bordered" href="/account/login") Se connecter
-            a(class="nav-item bordered" href="/account/register") S'enregistrer
+            a(class="nav-item" href="/account/login") Se connecter
+            a(class="nav-item" href="/account/register") S'enregistrer
           - if(roleId > -1)
             a(class="nav-item" href="/account/logout") Se déconnecter
     section(class="maincontent")
