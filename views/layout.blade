@@ -14,11 +14,8 @@ html
       nav(class="navigation-bar")
         div(class="nav-wrapper")
           a(class="nav-item home bordered" href="/") Imhotep
-          a(class="nav-item bordered" href="/") Annonces
-          - if(roleId > -1 && roleId <= 1)
-            a(class="nav-item bordered" href="/") Publier une annonce
+          a(class="nav-item bordered" href="/announcements") Annonces
           - if(roleId == 0)
-            a(class="nav-item bordered" href="/") Gérer les annonces
             a(class="nav-item bordered" href="/account/roles") Gérer les roles
           - if(roleId < 0)
             a(class="nav-item bordered" href="/account/login") Se connecter

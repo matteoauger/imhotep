@@ -32,7 +32,7 @@ router.get('/register', (req, res) => {
     renderView(req, res, 'account/register', { data: null, errors: null, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
 });
 
-router.post('/register', (req, res) => {
+router.post('/register', (req, res, next) => {
     // inserting the unser into the database
     insertUser(req)
         .then(user => {

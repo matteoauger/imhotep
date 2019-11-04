@@ -1,0 +1,9 @@
+include "../layout.blade"
+render title("Annonces")
+replace block maincontent
+    h1 Liste des annonces
+    div
+        foreach announcements as announcement
+            div
+                p #{announcement.id}
+                p #{announcement.title}
