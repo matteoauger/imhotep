@@ -10,10 +10,9 @@ router.get('/', wrap(async function(req, res) {
     res.render('ad/list', setupOptions(req, { ads }));
 }));
 
-router.get('/id=:id', wrap(async function(req, res) {
-    console.log(req.params.id);
+router.get('/:id', wrap(async function(req, res) {
     const ad = await Ad.findById(req.params.id);
-    res.render('ad/read', setupOptions(req, { ad }));
+    res.render('ad/read', setupOptions(req, { ad, error: {} }));
 }));
 
 router.get('/create', function(req, res) {

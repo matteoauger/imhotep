@@ -20,7 +20,7 @@ replace block maincontent
                 div(class="photo")
                     img(src="knar.jpg")
                 div(class="button-container")
-                    a(href="/") Voir l'annonce
+                    a(href="/ads/#{ad._id}") Voir l'annonce
                     - if (roleId > -1 && roleId <= 1)
                         button(class="edit") Modifier
                         button(class="delete") Supprimer
