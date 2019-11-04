@@ -10,19 +10,19 @@ replace block maincontent
     form(action="/account/register" method="post")
       div(class="form-group")
         label(for="email") Adresse email
-        input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}" required)
+        input(id="email" type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}" required)
         - if (errors && errors.email)
           span(class="field-error") #{errors.email} 
 
       div(class="form-group")
         label(for="firstname") Prénom
-        input(type="text" name="firstname" placeholder="Votre prénom" value="#{data.firstname}" required)
+        input(id="firstname" type="text" name="firstname" placeholder="Votre prénom" value="#{data.firstname}" required)
         - if (errors && errors.firstname)
           span(class="field-error") #{errors.firstname} 
 
       div(class="form-group")
         label(for="lastname") Nom
-        input(type="text" name="lastname" placeholder="Votre nom" value="#{data.lastname}" required)
+        input(id="lastname" type="text" name="lastname" placeholder="Votre nom" value="#{data.lastname}" required)
         - if (errors && errors.lastname)
           span(class="field-error") #{errors.lastname} 
 

@@ -16,25 +16,25 @@ replace block maincontent
                 
                 div(class="form-group")
                     label(for="title") Titre
-                    input(type="text" name="title" placeholder="Pyramide de khéops" required)
+                    input(id="title" type="text" name="title" placeholder="Pyramide de khéops" required)
 
                 div(class="form-group")
                     label(for="type") Type de bien
-                    select(name="type" required)
+                    select(id="type" name="type" required)
                         option(disabled selected value="") ---
                         option(value="Vente") Vente
                         option(value="Location") Location
 
                 div(class="form-group")
                     label(for="publish_status") Status de publication
-                    select(name="publish_status" required)
+                    select(id="publish_status" name="publish_status" required)
                         option(disabled selected value="") ---
                         option(value="Publiée") Publiée
                         option(value="Non publiée") Non publiée
 
                 div(class="form-group")
                     label(for="transaction_status") Status de transaction
-                    select(name="transaction_status" required)
+                    select(id="transaction_status" name="transaction_status" required)
                         option(disabled selected value="") ---
                         option(value="Disponible") Disponible
                         option(value="Louée") Louée
@@ -42,18 +42,18 @@ replace block maincontent
 
                 div(class="form-group")
                     label(for="price") Prix
-                    input(type="number" name="price" min="0" placeholder="€" required)
+                    input(id="price" type="number" name="price" min="0" placeholder="€" required)
 
                 div(class="form-group")
                     label(for="disponibility_date") Date de disponibilité
-                    input(type="date" name="disponibility_date" required)
+                    input(id="disponibility_date" type="date" name="disponibility_date" required)
 
             fieldset
                 legend Détails
 
                 div(class="form-group")
                     label(for="description") Description
-                    textarea(name="description" placeholder="Belle vue sur Le Caire, ..." rows="6" cols="75")
+                    textarea(id="description" name="description" placeholder="Belle vue sur Le Caire, ..." rows="6" cols="75")
 
                 div(class="form-button-container")
                     button(type="submit") Créer l'annonce
