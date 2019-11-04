@@ -248,7 +248,7 @@ describe('Account routes', () => {
                     .set('Cookie', cookieValue)
                     .send();
 
-                assert.equal(res.statusCode, 401);
+                assert.equal(res.statusCode, 403);
                 assert.equal(res.type, 'text/html');
             });
         });
@@ -270,7 +270,7 @@ describe('Account routes', () => {
 
                 let user = await User.findOne({ email: userData.email });
 
-                assert.equal(res.statusCode, 401);
+                assert.equal(res.statusCode, 403);
                 assert.equal(user.role_id, USER_ROLES.user.id);
             });
 

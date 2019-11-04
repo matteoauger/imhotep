@@ -6,9 +6,9 @@
 function wrap(handler) {
     return async function(req, res, next) {
         try {
-            return handler(req, res, next);
-        } catch (next) {
-            return next(next);
+            return await handler(req, res, next);
+        } catch (err) {
+            return next(err);
         }
     };
 }

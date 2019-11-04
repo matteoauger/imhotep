@@ -9,7 +9,7 @@ replace block maincontent
             div(class="form-error")
             span(class="error") #{error}
 
-        form(action="/ads/create" method="post")
+        form(action="/ads/create" method="post" enctype="multipart/form-data")
             fieldset
                 legend Informations
                 
@@ -53,6 +53,10 @@ replace block maincontent
                 div(class="form-group")
                     label(for="description") Description
                     textarea(id="description" name="description" placeholder="Belle vue sur Le Caire, ..." rows="6" cols="75")
+
+                div(class="form-group")
+                    label(for="pictures") Images
+                    input(id="pictures" type="file" name="pictures" accept="image/*" multiple)
 
                 div(class="form-button-container")
                     button(type="submit") Créer l'annonce

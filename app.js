@@ -14,7 +14,7 @@ const app = express();
 
 require('dotenv').config();
 
-const logging = process.env.ENABLE_LOGS && process.env.ENABLE_LOGS === "true";
+const logging = process.env.ENABLE_LOGS === "true";
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,8 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 if (logging) {
     // create a write stream (in append mode)
-    var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
-
+    const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
     // setup the logger
     app.use(morgan('combined', { stream: accessLogStream }));
 } else {
@@ -57,7 +56,7 @@ app.use(function (err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error', {roleId: 0});
+    res.render('error');
 });
 
 module.exports = app;

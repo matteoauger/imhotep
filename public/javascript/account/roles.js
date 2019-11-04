@@ -1,5 +1,5 @@
-function sendChanges(userId, roleId) {
-    fetch('/account/roles', {
+async function sendChanges(userId, roleId) {
+    const init = {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -9,15 +9,11 @@ function sendChanges(userId, roleId) {
             user_id: userId, 
             role_id: roleId
         })
-    })
-    .then(res => {
-        if (res.status !== 200) {
-            throw new Error(`Failed ${res.status}`);
-        }
-    })
-    .catch(err => {
-        alert("Erreur " + err.status);
-    });
+    };
+    const res = await fetch('/account/roles', init);
+    if (res.status !== 200) {
+        alert(`Erreur - ${res.status}`);
+    }
 }
 
 function attachEvents() {

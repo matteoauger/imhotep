@@ -3,10 +3,11 @@ const USER_ROLES = require('../../model/user-roles');
 const assert = require('assert');
 
 describe('Role restriction', () => {
-    it('should grant a super admin in an user restriction', () => {
-        const next = (err = null) => {
+    it('should grant a super admin in an user restriction', (done) => {
+        const next = (err) => {
             // assert that next was called without error
             assert.equal(err, undefined);
+            done();
         };
         const req = {
             session: {
@@ -20,10 +21,11 @@ describe('Role restriction', () => {
         result(req, res, next);
     });
 
-    it('should grant an agent in an user restriction', () => {
-        const next = (err = null) => {
+    it('should grant an agent in an user restriction', (done) => {
+        const next = (err) => {
             // assert that next was called without error
             assert.equal(err, undefined);
+            done();
         };
         const req = {
             session: {
@@ -37,10 +39,11 @@ describe('Role restriction', () => {
         result(req, res, next);
     });
 
-    it('should not grant an user in an agent restriction', () => {
-        const next = (err = null) => {
-            // assert that next was called without error
+    it('should not grant an user in an agent restriction', (done) => {
+        const next = (err) => {
+            // assert that next was called with error
             assert.ok(err);
+            done();
         };
         const req = {
             session: {
@@ -54,10 +57,11 @@ describe('Role restriction', () => {
         result(req, res, next);
     });
 
-    it('should not grant an agent in a super admin restriction', () => {
-        const next = (err = null) => {
-            // assert that next was called without error
+    it('should not grant an agent in a super admin restriction', (done) => {
+        const next = (err) => {
+            // assert that next was called with error
             assert.ok(err);
+            done();
         };
         const req = {
             session: {
