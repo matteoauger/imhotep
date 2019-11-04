@@ -1,52 +1,70 @@
 nav.navigation-bar {
   div.nav-wrapper {
     font-family: $title-font;
-    margin: 0 5% 0 5%;
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    @media screen and (max-width: 750px) {
-      margin: 0;
-      flex-direction: column;
-    }
-
     // nav item
-    a.nav-item {
-      &.bordered {
-        border-right: 1px solid $darkblue;
-
-        @media screen and (max-width: 750px) {
-          border-right: none;
-          border-bottom: 1px solid $darkblue;
-        }
-      }
-
-      &.home {
-        background-color: $darkblue;
-        color: $yellow;
-
-        &:hover {
-          background-color: darken($darkblue, 10%);
-        }
-      }
-
-      &:hover {
-        background-color: $darkyellow;
-      }
-
+    .nav-item {
+      max-width: 200px;
+      background-color: $darkblue;
+      color: $yellow;
       width: 100%;
-      height: 50px;
+      height: 80px;
       text-decoration: none;
       font-size: 1.1rem;
-
-      background-color: $yellow;
-      color: $darkblue;
 
       // text align center horizontically and vertically
       display: flex;
       justify-content: center;
       align-items: center;
+
+      &:hover {
+        background-color: darken($darkblue, 10%);
+      }
+
+      // home nav item
+      &.home {
+        max-width: none;
+        justify-content: flex-start;
+
+        // child link
+        a {
+          padding-left: 30px;
+          font-size: 2rem;
+          font-weight: bold;
+          text-decoration: none;
+          color: $yellow;
+        }
+
+        // removing hover style
+        &:hover {
+          background-color: $darkblue;
+        }
+      }
+    }
+  }
+
+  // style responsive
+  @media screen and (max-width: 750px) {
+    div.nav-wrapper {
+      margin: 0;
+      flex-direction: column;
+
+      .nav-item {
+        max-width: none;
+        width: 100%;
+        height: 40px;
+
+        &.home {
+          height: 60px;
+          justify-content: center;
+          a {
+            padding-left: 0px;
+          }
+        }
+      }
     }
   }
 }
