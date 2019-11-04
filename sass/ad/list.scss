@@ -1,0 +1,108 @@
+@import "../modules/common";
+
+// liste des annonces
+article.adlist {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    .ad-item {
+        background-color: white;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        min-width: 30%;
+        border: 2px solid lighten($darkblue, 60%);
+        border-radius: 10px;
+        margin-bottom: 20px;
+        
+
+        span {
+            &.type {
+                font-size: 2rem;
+                color: $darkblue;
+            }
+        }
+
+        h3 {
+            margin: 5px;
+            font-family: $title-font;
+            color: $yellow;
+            font-size: 3rem;
+
+            &.not-available {
+                text-decoration: line-through;
+                color: grey;
+            }
+        }
+
+        h4 {
+            font-size: 1.2rem;
+        }
+
+        .button-container {
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0 20px 0;
+
+            a {
+                @extend button;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                color: $darkblue;
+            }
+
+            a, button {
+                padding: 0 10px 0 10px;
+                width: auto;
+
+                &.edit {
+                    background-color: $admin-green;
+                    color: white;
+
+                    &:hover {
+                        background-color: $admin-green-hover;
+                    }
+                }
+
+                &.delete {
+                    background-color: $admin-red;
+                    color: white;
+
+                    &:hover {
+                        background-color: $admin-red-hover;
+                    }
+                }
+            }
+        }
+
+        .photo {
+            img {
+                max-width: 100%;
+                max-height: 200px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .adlist {
+        .ad-item {
+            .button-container {
+                height: auto;
+                flex-direction: column;
+
+                a, button {
+                    min-height: 50px;
+                    margin: 2px;
+                }
+            }
+        }
+    }
+}
