@@ -3,8 +3,8 @@ const router = express.Router();
 const renderView = require('../middleware/render-view');
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-    renderView(req, res, 'index', { title: 'Express' });
+router.get('/', function (req, res) {
+    renderView(req, res, 'index');
 });
 
 module.exports = router;
