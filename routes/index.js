@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const renderView = require('../middleware/render-view');
+const setupOptions = require('../middleware/setup-options');
 
 /* GET home page. */
 router.get('/', function (req, res) {
-    renderView(req, res, 'index');
+    res.render('index', setupOptions(req));
 });
 
 module.exports = router;

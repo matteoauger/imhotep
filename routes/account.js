@@ -5,33 +5,36 @@ const User = require('../model/user-schema');
 const roleRestriction = require('../middleware/role-restriction');
 const USER_ROLES = require('../model/user-roles');
 const wrap = require('../middleware/promise-wrapper');
-const renderView = require('../middleware/render-view');
+const setupOptions = require('../middleware/setup-options');
 
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 32;
 
 router.get('/login', (req, res) => {
-    renderView(req, res, 'account/login', { error: null, data: {} });
+    const options = setupOptions(req, {error: null, data: {}});
+    res.render('account/login', options);
 });
 
 router.post('/login', wrap(async (req, res) => {
     if (!req.body.email || !req.body.password) {
-        renderView(req, res, 'account/login', { error: 'Merci de préciser l\'email et le mot de passe', data: req.body });
-    }
-    // authentication
-    try {
-        const user = await authenticate(req.body.email, req.body.password);
-        req.session.userId = user._id;
-        req.session.roleId = user.role_id;
-        return res.redirect('/');
-    }
-    catch (_) {
-        return renderView(req, res, 'account/login', { error: 'Identifiants invalides', data: req.body });
+        res.render('account/login', setupOptions(req, { error: 'Merci de préciser l\'email et le mot de passe', data: req.body }));
+    } else {
+        // authentication
+        try {
+            const user = await authenticate(req.body.email, req.body.password);
+            req.session.userId = user._id;
+            req.session.roleId = user.role_id;
+            res.redirect('/');
+        }
+        catch (_) {
+            res.render('account/login', setupOptions(req, { error: 'Identifiants invalides', data: req.body }));
+        }
     }
 }));
 
 router.get('/register', (req, res) => {
-    renderView(req, res, 'account/register', { data: {}, errors: null, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
+    const options = setupOptions(req, { data: {}, errors: null, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH });
+    res.render('account/register', options);
 });
 
 router.post('/register', wrap(async (req, res, next) => {
@@ -45,10 +48,12 @@ router.post('/register', wrap(async (req, res, next) => {
     }
     catch (error) {
         // sending the validation errors to the register form
-        if (error && error.name === 'ValidationError')
-            renderView(req, res, 'account/register', { data: req.body, errors: error.errors, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH });
-        else
+        if (error && error.name === 'ValidationError') {
+            const options = setupOptions(req, { data: req.body, errors: error.errors, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH });   
+            res.render('account/register', options);
+        } else {
             next(error);
+        }
     }
 }));
 
@@ -64,17 +69,17 @@ router.get('/roles', roleRestriction(USER_ROLES.super_admin), wrap(async (req, r
     const users = await User.find();
     const roles = USER_ROLES;
 
-    renderView(req, res, 'account/roles', { users, roles });
+    res.render('account/roles', setupOptions(req, { users, roles }));
 }));
 
-router.post('/roles', roleRestriction(USER_ROLES.super_admin), async (req, res) => {
+router.post('/roles', roleRestriction(USER_ROLES.super_admin), wrap(async (req, res) => {
     if (!req.body.user_id || req.body.role_id < 0) {
         res.status(400).send('Invalid request parameters');
     } else {
         await User.updateOne({ _id: req.body.user_id }, { role_id: req.body.role_id });
         res.status(200).send('Success');
     }
-});
+}));
 
 async function insertUser(req) {
     const body = req.body;
@@ -88,12 +93,11 @@ async function insertUser(req) {
 
     // hashing and setting the password to the user if the sent one is valid
     if (body.password && body.password.length >= MIN_PASSWORD_LENGTH && body.password.length <= MAX_PASSWORD_LENGTH) {
-        userData.password = await bcrypt.hash(body.password, 10)
+        userData.password = await bcrypt.hash(body.password, 10);
     }
 
     // inserting the user into the database
     await userData.save();
-
     return userData;
 }
 
@@ -103,11 +107,11 @@ async function authenticate(email, password) {
     // if passwords match, setting the user id into the session
     const passwordMatches = await bcrypt.compare(password, user.password);
 
-    if (passwordMatches) {
-        return user;
+    if (!passwordMatches) {
+        throw Error("Invalid email or password");
     }
 
-    throw Error("Invalid email or password");
+    return user;
 }
 
 module.exports = router;
