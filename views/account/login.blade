@@ -12,14 +12,11 @@ replace block maincontent
         form(action="/account/login" method="post")
             div(class="form-group")
                 label(for="email") Adresse e-mail
-                input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email || ''}")
+                input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}" required)
 
             div(class="form-group")
                 label(for="password") Mot de passe
-                - if(data && data.password)
-                    input(type="password" name="password" placeholder="" value="#{data.password}")
-                - else 
-                    input(type="password" name="password" placeholder="")
+                input(type="password" name="password" placeholder="" value="#{data.password}" required)
 
             div(class="form-button-container")
                 button(type="submit") Se connecter

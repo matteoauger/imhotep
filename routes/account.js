@@ -10,7 +10,7 @@ const MIN_PASSWORD_LENGTH = 8;
 const MAX_PASSWORD_LENGTH = 32;
 
 router.get('/login', (req, res) => {
-    renderView(req, res, 'account/login', { error: null, data: null });
+    renderView(req, res, 'account/login', { error: null, data: {} });
 });
 
 router.post('/login', (req, res) => {
@@ -29,7 +29,7 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/register', (req, res) => {
-    renderView(req, res, 'account/register', { data: null, errors: null, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
+    renderView(req, res, 'account/register', { data: {}, errors: null, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH});
 });
 
 router.post('/register', (req, res, next) => {

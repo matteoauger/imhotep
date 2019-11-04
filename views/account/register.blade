@@ -10,37 +10,25 @@ replace block maincontent
     form(action="/account/register" method="post")
       div(class="form-group")
         label(for="email") Adresse email
-        - if(data && data.email)
-          input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}")
-        - else
-          input(type="text" name="email" placeholder="Votre adresse e-mail")
+        input(type="text" name="email" placeholder="Votre adresse e-mail" value="#{data.email}" required)
         - if (errors && errors.email)
           span(class="field-error") #{errors.email} 
 
       div(class="form-group")
         label(for="firstname") Prénom
-        - if(data && data.firstname)
-          input(type="text" name="firstname" placeholder="Votre prénom" value="#{data.firstname}")
-        - else 
-          input(type="text" name="firstname" placeholder="Votre prénom")
+        input(type="text" name="firstname" placeholder="Votre prénom" value="#{data.firstname}" required)
         - if (errors && errors.firstname)
           span(class="field-error") #{errors.firstname} 
 
       div(class="form-group")
         label(for="lastname") Nom
-        - if(data && data.lastname)
-          input(type="text" name="lastname" placeholder="Votre nom" value="#{data.lastname}")
-        - else 
-          input(type="text" name="lastname" placeholder="Votre nom")
+        input(type="text" name="lastname" placeholder="Votre nom" value="#{data.lastname}" required)
         - if (errors && errors.lastname)
           span(class="field-error") #{errors.lastname} 
 
       div(class="form-group")
         label(for="password") Mot de passe
-        - if(data && data.password)
-          input(id="password" type="password" name="password" minlength="#{MIN_PASSWORD_LENGTH}" maxlength="#{MAX_PASSWORD_LENGTH}" placeholder="" value="#{data.password}")
-        - else 
-          input(id="password" type="password" name="password" placeholder="")
+        input(id="password" type="password" name="password" minlength="#{MIN_PASSWORD_LENGTH}" maxlength="#{MAX_PASSWORD_LENGTH}" value="#{data.password}" required)
         - if (errors && errors.password)
           span(class="field-error") #{errors.password} 
 
@@ -50,7 +38,7 @@ replace block maincontent
           id="password-confirmation"
           name="password-confirmation"
           type="password"
-          value=""
+          required
         )
         span(class="field-error", id="password-confirmation-error" style="display: none;") Les mots de passe ne correspondent pas
         
