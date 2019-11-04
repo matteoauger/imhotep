@@ -1,0 +1,71 @@
+@import "../modules/common";
+
+// style page annonce
+article.ad {
+    .ad-details {
+        display: flex;
+    
+        .ad-photos {
+            margin-right: 30px;
+            width: 25%;
+            min-width: 300px;
+            .main-photo > img {
+                max-width: 100%;
+                max-height: 400px;
+            }
+    
+            .other-photos {
+                display: flex;
+                justify-content: space-between;
+                img {
+                    max-height: 200px;
+                    max-width: 49%;
+                }
+            }
+        }
+        .ad-content {
+            width: 100%;
+
+            h2 {
+                font-size: 2rem;
+                font-family: $title-font;
+                color: $darkblue;
+                margin: 5px;
+            }
+    
+            span {
+                display: inline-block;
+                width: 100%;
+                font-size: 1.5rem;
+                color: $darkblue;
+            }
+        }
+    }
+
+    .comments {
+        .comment {
+            margin-left: 20px;
+            padding: 20px;
+            border: 1px solid $darkblue;
+            border-radius: 5px;
+
+            .reply {
+                background-color: darken($background-color, 15%);
+                border-left: 1px solid $darkblue;
+                margin-left: 10px;
+                padding: 0 20px 0 20px;
+            }
+        }
+
+        span.author {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .ad-details {
+        flex-direction: column;
+    }
+}
