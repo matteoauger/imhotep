@@ -46,10 +46,9 @@ const PictureSchema = new Schema({
         type: Buffer,
         required: true
     },
-    contentType: {
+    name: {
         type: String,
-        required: true,
-        validate: /^image\/\w{1,6}$/
+        required: true
     }
 });
 
