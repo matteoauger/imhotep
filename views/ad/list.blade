@@ -1,0 +1,11 @@
+include "../layout.blade"
+render title("Annonces")
+replace block maincontent
+    form(action="/ads/create")
+        input(type="submit" value="Créer une annonce")
+    h1 Liste des annonces
+    div
+        foreach ads as ad
+            div
+                p #{ad.id}
+                p #{ad.title}

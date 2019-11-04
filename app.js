@@ -8,7 +8,7 @@ const fs = require('fs');
 
 const indexRouter = require('./routes/index');
 const accountRouter = require('./routes/account');
-const announcementRouter = require('./routes/announcement');
+const adRouter = require('./routes/ad');
 
 const app = express();
 
@@ -42,7 +42,7 @@ if (logging) {
 
 app.use('/', indexRouter);
 app.use('/account', accountRouter);
-app.use('/announcements', announcementRouter);
+app.use('/ads', adRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

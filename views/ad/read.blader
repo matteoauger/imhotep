@@ -1,15 +1,15 @@
 include "../layout.blade"
 replace block stylesheets
     link(rel="stylesheet" href="/stylesheets/form.css")
-render title("Créer une annonce")
+render title("#{ad.title}")
 replace block maincontent
-    h1 Créer une annonce
+    h1 #{ad.title}
     div(class="form")
         - if(error)
             div(class="form-error")
             span(class="error") #{error}
 
-        form(action="/announcement/create" method="post")
+        form(action="/ad/create" method="post")
             fieldset
                 legend Informations
                 

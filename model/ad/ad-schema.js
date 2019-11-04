@@ -53,7 +53,7 @@ const PictureSchema = new Schema({
     }
 });
 
-const AnnouncementSchema = new Schema({
+const AdSchema = new Schema({
     title: {
         type: String,
         required: true,
@@ -95,4 +95,4 @@ const AnnouncementSchema = new Schema({
     questions: [QuestionSchema]
 });
 
-module.exports = mongoose.model('Announcement', AnnouncementSchema);
+module.exports = mongoose.model('Ad', AdSchema);
