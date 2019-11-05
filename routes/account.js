@@ -23,7 +23,7 @@ router.post('/login', wrap(async (req, res) => {
         try {
             const user = await authenticate(req.body.email, req.body.password);
             req.session.userId = user._id;
-            req.session.roleId = 0;
+            req.session.roleId = user.role_id;
             res.redirect('/');
         }
         catch (_) {
