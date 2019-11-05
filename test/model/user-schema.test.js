@@ -1,6 +1,6 @@
 const assert = require('assert');
 const User = require('../../model/user-schema');
-const USER_ROLES = require('../../model/user-roles');
+const UserRoles = require('../../model/user-roles');
 
 describe('User schema', () => {
     describe('Email validation', () => {

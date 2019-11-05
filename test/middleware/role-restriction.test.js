@@ -1,5 +1,5 @@
 const roleRestriction = require('../../middleware/role-restriction');
-const USER_ROLES = require('../../model/user-roles');
+const UserRoles = require('../../model/user-roles');
 const assert = require('assert');
 
 describe('Role restriction', () => {
@@ -11,11 +11,11 @@ describe('Role restriction', () => {
         };
         const req = {
             session: {
-                roleId: USER_ROLES.super_admin.id
+                roleId: UserRoles.SUPER_ADMIN.id
             }
         };
         const res = {};
-        const restriction = USER_ROLES.user;
+        const restriction = UserRoles.USER;
 
         const result = roleRestriction(restriction);
         result(req, res, next);
@@ -29,11 +29,11 @@ describe('Role restriction', () => {
         };
         const req = {
             session: {
-                roleId: USER_ROLES.agent.id
+                roleId: UserRoles.AGENT.id
             }
         };
         const res = {};
-        const restriction = USER_ROLES.user;
+        const restriction = UserRoles.USER;
 
         const result = roleRestriction(restriction);
         result(req, res, next);
@@ -47,11 +47,11 @@ describe('Role restriction', () => {
         };
         const req = {
             session: {
-                roleId: USER_ROLES.user.id
+                roleId: UserRoles.USER.id
             }
         };
         const res = {};
-        const restriction = USER_ROLES.agent;
+        const restriction = UserRoles.AGENT;
 
         const result = roleRestriction(restriction);
         result(req, res, next);
@@ -65,11 +65,11 @@ describe('Role restriction', () => {
         };
         const req = {
             session: {
-                roleId: USER_ROLES.agent.id
+                roleId: UserRoles.AGENT.id
             }
         };
         const res = {};
-        const restriction = USER_ROLES.super_admin;
+        const restriction = UserRoles.SUPER_ADMIN;
 
         const result = roleRestriction(restriction);
         result(req, res, next);

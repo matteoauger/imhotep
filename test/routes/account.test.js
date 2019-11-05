@@ -4,7 +4,7 @@ const app = require('../../app');
 const User = require('../../model/user-schema');
 const bcrypt = require('bcrypt');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-const USER_ROLES = require('../../model/user-roles');
+const UserRoles = require('../../model/user-roles');
 
 const mongoServer = new MongoMemoryServer();
 
@@ -62,7 +62,7 @@ describe('Account routes', () => {
             testUser.firstname = "test";
             testUser.lastname = "test";
             testUser.password = await bcrypt.hash(pass, 10);
-            testUser.role_id = USER_ROLES.user.id;
+            testUser.role_id = UserRoles.USER.id;
 
             await testUser.save();
 
@@ -80,7 +80,7 @@ describe('Account routes', () => {
             testUser.firstname = "test2";
             testUser.lastname = "test2";
             testUser.password = await bcrypt.hash("test", 10);
-            testUser.role_id = USER_ROLES.user.id;
+            testUser.role_id = UserRoles.USER.id;
 
             await testUser.save();
 
@@ -130,7 +130,7 @@ describe('Account routes', () => {
             assert.equal(usr.firstname, data.firstname);
             assert.equal(usr.lastname, data.lastname);
             assert.ok(bcrypt.compareSync(data.password, usr.password));
-            assert.equal(usr.role_id, USER_ROLES.user.id);
+            assert.equal(usr.role_id, UserRoles.USER.id);
             assert.ok(res.header['set-cookie']);
         });
 
@@ -216,7 +216,7 @@ describe('Account routes', () => {
         describe('Role managment page', () => {
             it('should return 200 if the user is a superadmin', async () => {
                 // granting super admin access to the test user
-                await User.updateOne({ email: userData.email }, { role_id: USER_ROLES.super_admin.id });
+                await User.updateOne({ email: userData.email }, { role_id: UserRoles.SUPER_ADMIN.id });
 
                 const loginRes = await request(app)
                     .post('/account/login')
@@ -271,12 +271,12 @@ describe('Account routes', () => {
                 let user = await User.findOne({ email: userData.email });
 
                 assert.equal(res.statusCode, 403);
-                assert.equal(user.role_id, USER_ROLES.user.id);
+                assert.equal(user.role_id, UserRoles.USER.id);
             });
 
             it('should respond (400) BAD REQUEST with invalid data', async () => {
                 // granting super admin access to the test user
-                await User.updateOne({ email: userData.email }, { role_id: USER_ROLES.super_admin.id });
+                await User.updateOne({ email: userData.email }, { role_id: UserRoles.SUPER_ADMIN.id });
 
                 const loginRes = await request(app)
                     .post('/account/login')
@@ -298,12 +298,12 @@ describe('Account routes', () => {
                 user = await User.findOne({ email: userData.email });
 
                 assert.equal(res.statusCode, 400);
-                assert.equal(user.role_id, USER_ROLES.super_admin.id);
+                assert.equal(user.role_id, UserRoles.SUPER_ADMIN.id);
             });
 
             it('should change the user role with valid parameters and authorization', async () => {
                 // granting super admin access to the test user
-                await User.updateOne({ email: userData.email }, { role_id: USER_ROLES.super_admin.id });
+                await User.updateOne({ email: userData.email }, { role_id: UserRoles.SUPER_ADMIN.id });
 
                 const loginRes = await request(app)
                     .post('/account/login')
@@ -319,13 +319,13 @@ describe('Account routes', () => {
                     .set('Cookie', cookieValue)
                     .send({
                         user_id: user._id,
-                        role_id: USER_ROLES.agent.id
+                        role_id: UserRoles.AGENT.id
                     });
 
                 user = await User.findOne({ email: userData.email });
 
                 assert.equal(res.statusCode, 200);
-                assert.equal(user.role_id, USER_ROLES.agent.id);
+                assert.equal(user.role_id, UserRoles.AGENT.id);
             });
         });
     });

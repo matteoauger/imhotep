@@ -23,7 +23,7 @@ replace block maincontent
                         td
                             select(id="#{user._id}")
                                 foreach roles as role
-                                    - if (role.id == user.role_id)
+                                    - if (role.id === user.role_id)
                                         option(value="#{role.id}" selected) #{role.label}
                                     - else 
                                         option(value="#{role.id}") #{role.label}

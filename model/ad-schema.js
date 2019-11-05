@@ -1,27 +1,27 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Type = {
+const Type = Object.freeze({
     SALE: 'Vente',
     RENT: 'Location'
-};
+});
 
-const PublishStatus = {
+const PublishStatus = Object.freeze({
     PUBLISHED: 'Publiée',
     NOT_PUBLISHED: 'Non publiée'
-};
+});
 
-const TransactionStatus = {
+const TransactionStatus = Object.freeze({
     AVAILABLE: 'Disponible',
     RENTED: 'Louée',
     SALED: 'Vendue'
-};
+});
 
 const CommentSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: [true, 'L\'identifiant de l\'utilisateur est obligatoire']
     },
     date: {
         type: Date,
@@ -29,7 +29,7 @@ const CommentSchema = new Schema({
     },
     text: {
         type: String,
-        required: true,
+        required: [true, 'Le texte du commentaire est obligatoire'],
         trim: true,
         minlength: 2,
         maxlength: 2048
@@ -44,18 +44,18 @@ const QuestionSchema = new Schema({
 const PictureSchema = new Schema({
     data: {
         type: Buffer,
-        required: true
+        required: [true, 'La donnée de l\'image est obligatoire']
     },
     name: {
         type: String,
-        required: true
+        required: [true, 'Le nom de l\'image est obligatoire']
     }
 });
 
 const AdSchema = new Schema({
     title: {
         type: String,
-        required: true,
+        required: [true, 'Le titre est obligatoire'],
         trim: true,
         minlength: 4,
         maxlength: 126
@@ -63,27 +63,26 @@ const AdSchema = new Schema({
     type: {
         type: String,
         enum: Object.values(Type),
-        required: true,
+        required: [true, 'Le type de bien est obligatoire'],
     },
     publish_status: {
         type: String,
         enum: Object.values(PublishStatus),
-        required: true
+        required: [true, 'Le status de publication est obligatoire']
     },
     transaction_status: {
         type: String,
         enum: Object.values(TransactionStatus),
-        required: true
+        required: [true, 'Le status de transaction est obligatoire']
     },
     description: {
         type: String,
-        required: true,
-        minlength: 16,
-        maxlength: 1024
+        default: '',
+        maxlength: 2048
     },
     price: {
         type: Number,
-        required: true,
+        required: [true, 'Le prix est obligatoire'],
         min: 0
     },
     disponibility: {
@@ -94,4 +93,9 @@ const AdSchema = new Schema({
     questions: [QuestionSchema]
 });
 
-module.exports = mongoose.model('Ad', AdSchema);
+module.exports = {
+    Ad: mongoose.model('Ad', AdSchema),
+    Type,
+    PublishStatus,
+    TransactionStatus
+};

@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../model/user-schema');
 const roleRestriction = require('../middleware/role-restriction');
-const USER_ROLES = require('../model/user-roles');
+const UserRoles = require('../model/user-roles');
 const wrap = require('../middleware/promise-wrapper');
 const setupOptions = require('../middleware/setup-options');
 
@@ -23,7 +23,7 @@ router.post('/login', wrap(async (req, res) => {
         try {
             const user = await authenticate(req.body.email, req.body.password);
             req.session.userId = user._id;
-            req.session.roleId = user.role_id;
+            req.session.roleId = 0;
             res.redirect('/');
         }
         catch (_) {
@@ -65,14 +65,14 @@ router.get('/logout', (req, res) => {
     }
 });
 
-router.get('/roles', roleRestriction(USER_ROLES.super_admin), wrap(async (req, res) => {
+router.get('/roles', roleRestriction(UserRoles.SUPER_ADMIN), wrap(async (req, res) => {
     const users = await User.find();
-    const roles = USER_ROLES;
+    const roles = UserRoles;
 
     res.render('account/roles', setupOptions(req, { users, roles }));
 }));
 
-router.post('/roles', roleRestriction(USER_ROLES.super_admin), wrap(async (req, res) => {
+router.post('/roles', roleRestriction(UserRoles.SUPER_ADMIN), wrap(async (req, res) => {
     if (!req.body.user_id || req.body.role_id < 0) {
         res.status(400).send('Invalid request parameters');
     } else {
@@ -89,7 +89,7 @@ async function insertUser(req) {
     userData.email = body.email;
     userData.lastname = body.lastname;
     // setting the role to user by default
-    userData.role_id = USER_ROLES.user.id;
+    userData.role_id = UserRoles.USER.id;
 
     // hashing and setting the password to the user if the sent one is valid
     if (body.password && body.password.length >= MIN_PASSWORD_LENGTH && body.password.length <= MAX_PASSWORD_LENGTH) {

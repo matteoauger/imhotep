@@ -18,11 +18,11 @@ class UserRole {
  *
  * Registers every role a user can be assigned to
  */
-const USER_ROLES = {
-    super_admin: new UserRole(0, "Super Admin"),
-    agent: new UserRole(1, "Agent"),
-    user: new UserRole(2, "Utilisateur"),
-};
+const UserRoles = Object.freeze({
+    SUPER_ADMIN: new UserRole(0, 'Super Admin'),
+    AGENT: new UserRole(1, 'Agent'),
+    USER: new UserRole(2, 'Utilisateur'),
+});
 
 
-module.exports = USER_ROLES;
+module.exports = UserRoles;

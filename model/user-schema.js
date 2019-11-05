@@ -9,23 +9,23 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         unique: [true, 'Cette adresse e-mail est déjà utilisée'],
-        required: [true, "L'adresse e-mail est obligatoire"],
+        required: [true, 'L\'adresse e-mail est obligatoire'],
         trim: true,
         validate: {
             validator: function(email) {
               return EMAIL_REGEXP.test(email)
             },
-            message: () => "L'adresse email est invalide"
+            message: () => 'L\'adresse email est invalide'
         }
     },
     firstname: {
         type: String,
-        required: [true, "Le prénom est obligatoire"],
+        required: [true, 'Le prénom est obligatoire'],
         trim: true
     },
     lastname: {
         type: String,
-        required: [true, "Le nom est obligatoire"],
+        required: [true, 'Le nom est obligatoire'],
         trim: true
     },
     password: {
@@ -38,5 +38,4 @@ const UserSchema = new mongoose.Schema({
     }
 });
 
-var User = mongoose.model('User', UserSchema);
-module.exports = User;
+module.exports = mongoose.model('User', UserSchema);

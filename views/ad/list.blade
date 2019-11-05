@@ -5,8 +5,9 @@ replace block stylesheets
 replace block scripts 
     script(src="/javascript/ad/actions.js" type="text/javascript")
 replace block maincontent
-    form(action="/ads/create")
-        input(type="submit" value="Créer une annonce")
+    - if (roleId > -1 && roleId <= 1)
+        div(class="button-container")
+            a(href="/ads/create") Créer une annonce
     h1 Liste des annonces
     article(class="adlist")
         foreach ads as ad

@@ -5,10 +5,6 @@ render title("Créer une annonce")
 replace block maincontent
     h1 Créer une annonce
     div(class="form")
-        - if(error)
-            div(class="form-error")
-            span(class="error") #{error}
-
         form(action="/ads/create" method="post" enctype="multipart/form-data")
             fieldset
                 legend Informations
@@ -16,36 +12,50 @@ replace block maincontent
                 div(class="form-group")
                     label(for="title") Titre
                     input(id="title" type="text" name="title" placeholder="Pyramide de khéops" required)
-
+                    - if (errors.title)
+                        span(class="field-error") #{errors.title}
                 div(class="form-group")
                     label(for="type") Type de bien
                     select(id="type" name="type" required)
-                        option(disabled selected value="") ---
-                        option(value="Vente") Vente
-                        option(value="Location") Location
+                        foreach types as type
+                            - if (data.type === type)
+                                option(value="#{type}" selected) #{type}
+                            - else
+                                option(value="#{type}") #{type}
+                    - if (errors.type)
+                        span(class="field-error") #{errors.type}
 
                 div(class="form-group")
                     label(for="publish_status") Status de publication
                     select(id="publish_status" name="publish_status" required)
-                        option(disabled selected value="") ---
-                        option(value="Publiée") Publiée
-                        option(value="Non publiée") Non publiée
+                        foreach publish_status as pub_status
+                            - if (data.publish_status === pub_status)
+                                option(value="#{pub_status}" selected) #{pub_status}
+                            - else
+                                option(value="#{pub_status}") #{pub_status}
+                    - if (errors.publish_status)
+                        span(class="field-error") #{errors.publish_status}
 
                 div(class="form-group")
                     label(for="transaction_status") Status de transaction
                     select(id="transaction_status" name="transaction_status" required)
-                        option(disabled selected value="") ---
-                        option(value="Disponible") Disponible
-                        option(value="Louée") Louée
-                        option(value="Vendue") Vendue
+                        foreach transaction_status as trans_status
+                            - if (data.transaction_status === trans_status)
+                                option(value="#{trans_status}" selected) #{trans_status}
+                            - else
+                                option(value="#{trans_status}") #{trans_status}
+                    - if (errors.transaction_status)
+                        span(class="field-error") #{errors.transaction_status}
 
                 div(class="form-group")
                     label(for="price") Prix
                     input(id="price" type="number" name="price" min="0" placeholder="€" required)
+                    - if (errors.price)
+                        span(class="field-error") #{errors.price}
 
                 div(class="form-group")
                     label(for="disponibility_date") Date de disponibilité
-                    input(id="disponibility_date" type="date" name="disponibility_date" required)
+                    input(id="disponibility_date" type="date" name="disponibility_date")
 
             fieldset
                 legend Détails
@@ -53,6 +63,8 @@ replace block maincontent
                 div(class="form-group")
                     label(for="description") Description
                     textarea(id="description" name="description" placeholder="Belle vue sur Le Caire, ..." rows="6" cols="75")
+                    - if (errors.description)
+                        span(class="field-error") #{errors.description}
 
                 div(class="form-group")
                     label(for="pictures") Images
