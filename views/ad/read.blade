@@ -7,10 +7,10 @@ replace block maincontent
         div(class="ad-details")
             div(class="ad-photos")
                 div(class="main-photo")
-                    img(src="http://placehold.it/500/500")
+                    img(src="/ads/id=#{ad.id}/pictures/0")
                 div(class="other-photos")
-                    img(src="http://placehold.it/500/500")
-                    img(src="http://placehold.it/500/500")
+                    img(src="/ads/id=#{ad.id}/pictures/1")
+                    img(src="/ads/id=#{ad.id}/pictures/2")
             div(class="ad-content")
                 h1 #{ad.title}
                 h2 #{ad.price} €
